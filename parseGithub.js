@@ -57,7 +57,9 @@ var getCollabsFromUserRepo = (userName, repo, callback) => {
     } else {
       var info = JSON.parse(body);
       var collabs = info.map(collab => collab.login);
-      collabs.splice(collabs.indexOf(userName), 1);
+      if (collabs.indexOf(userName) !== -1) {
+        collabs.splice(collabs.indexOf(userName), 1);
+      }
       callback(null, collabs);
     }
   })
