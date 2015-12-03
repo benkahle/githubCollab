@@ -2,9 +2,10 @@ var fs = require('fs');
 var request = require('request');
 var async = require('async');
 var _ = require('lodash');
+require('dotenv').load();
 
 var apiRoot = "https://api.github.com";
-var API_KEY = "651a7d727bc275b0fad68bf711f1d6816b5861b2";
+var API_KEY = process.env.OAUTH_TOKEN;
 var oAuthAppend = "?access_token=" + API_KEY;
 var standardHeaders = {
   "User-Agent": "benkahle"
