@@ -85,7 +85,6 @@ reposByOwner = JSON.parse(fs.readFileSync(storedReposByOwnerFile, "utf-8"));
 
 //NOTE: Generate Collabs
 async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
-  console.log("Starting user loop");
   async.forEach(reposByOwner[repoOwner], (repo, innerCallback) => {
     getCollabsFromUserRepo(repoOwner, repo, (err, collabs) => {
       if (err) console.error(err);
@@ -93,7 +92,6 @@ async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
       innerCallback();
     });
   }, (err) => {
-    console.log("inner complete");
     outerCallback();
   });
 }, (err) => {
