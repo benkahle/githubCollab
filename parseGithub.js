@@ -13,6 +13,7 @@ var standardHeaders = {
 
 var storedReposByOwnerFile = "./reposByOwner.json";
 var storedCollabsByPersonFile = "./collabsByPerson.json";
+var storedBDCollabsByPersonFile = "./bdCollabsByPerson.json";
 
 var namesList = fs.readFileSync("./githubnames.txt", "utf-8").split("\n").slice(0,-1);
 
@@ -57,7 +58,9 @@ var getCollabsFromUserRepo = (userName, repo, callback) => {
     } else {
       var info = JSON.parse(body);
       var collabs = info.map(collab => collab.login);
-      collabs.splice(collabs.indexOf(userName), 1);
+      if (collabs.indexOf(userName) !== -1) {
+        collabs.splice(collabs.indexOf(userName), 1);
+      }
       callback(null, collabs);
     }
   })
@@ -77,6 +80,7 @@ var getCollabsFromUserRepo = (userName, repo, callback) => {
 // });
 reposByOwner = JSON.parse(fs.readFileSync(storedReposByOwnerFile, "utf-8"));
 
+//NOTE: Count repositories (number of github requests to make)
 // var count = 0;
 // Object.keys(reposByOwner).forEach(owner => {
 //   reposByOwner[owner].forEach(repo => count++)
@@ -84,17 +88,26 @@ reposByOwner = JSON.parse(fs.readFileSync(storedReposByOwnerFile, "utf-8"));
 // console.log(count);
 
 //NOTE: Generate Collabs
-async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
-  async.forEach(reposByOwner[repoOwner], (repo, innerCallback) => {
-    getCollabsFromUserRepo(repoOwner, repo, (err, collabs) => {
-      if (err) console.error(err);
-      collabsByPerson[repoOwner] = _.union(collabsByPerson[repoOwner], collabs);
-      innerCallback();
-    });
-  }, (err) => {
-    outerCallback();
+// async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
+//   async.forEach(reposByOwner[repoOwner], (repo, innerCallback) => {
+//     getCollabsFromUserRepo(repoOwner, repo, (err, collabs) => {
+//       if (err) console.error(err);
+//       collabsByPerson[repoOwner] = _.union(collabsByPerson[repoOwner], collabs);
+//       innerCallback();
+//     });
+//   }, (err) => {
+//     outerCallback();
+//   });
+// }, (err) => {
+//   console.log("writing");
+//   fs.writeFileSync(storedCollabsByPersonFile, JSON.stringify(collabsByPerson));
+// });
+collabsByPerson = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, "utf-8"));
+
+//NOTE: Make collabs bi-directional
+Object.keys(collabsByPerson).forEach(person => {
+  collabsByPerson[person].forEach(collab => {
+    collabsByPerson[collab] = _.union(collabsByPerson[collab], [person]);
   });
-}, (err) => {
-  console.log("writing");
-  fs.writeFileSync(storedCollabsByPersonFile, JSON.stringify(collabsByPerson));
 });
+fs.writeFileSync(storedBDCollabsByPersonFile, JSON.stringify(collabsByPerson));
