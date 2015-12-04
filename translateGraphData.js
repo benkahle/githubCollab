@@ -38,7 +38,7 @@ names.forEach(name => {
     links.push({
       source: nodeIndices[name],
       target: nodeIndices[linkedName],
-      value: 3
+      value: 2
     });
   });
 });
