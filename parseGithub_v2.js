@@ -124,6 +124,7 @@ async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
   async.forEach(reposByOwner[repoOwner], (repo, innerCallback) => {
     getCollabsFromUserRepo(repoOwner, repo, (err, collabs) => {
       if (err) console.error(err);
+      collabsByPerson[repoOwner] = {};
       collabs.forEach((collab) => {
         if (collabsByPerson[repoOwner][collab]){
           collabsByPerson[repoOwner][collab] += 1;
