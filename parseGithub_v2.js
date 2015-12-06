@@ -88,15 +88,15 @@ reposByOwner = JSON.parse(fs.readFileSync(storedReposByOwnerFile, "utf-8"));
 // console.log(count);
 
 function compressArray(original) {
- 
+
   var compressed = [];
   // make a copy of the input array
   var copy = original.slice(0);
- 
+
   // first loop goes over every element
   for (var i = 0; i < original.length; i++) {
- 
-    var myCount = 0;  
+
+    var myCount = 0;
     // loop over every element in the copy and see if it's the same
     for (var w = 0; w < copy.length; w++) {
       if (original[i] == copy[w]) {
@@ -106,7 +106,7 @@ function compressArray(original) {
         delete copy[w];
       }
     }
- 
+
     if (myCount > 0) {
       var a = new Object();
       a.value = original[i];
@@ -114,7 +114,7 @@ function compressArray(original) {
       compressed.push(a);
     }
   }
- 
+
   return compressed;
 };
 
@@ -124,12 +124,15 @@ async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
   async.forEach(reposByOwner[repoOwner], (repo, innerCallback) => {
     getCollabsFromUserRepo(repoOwner, repo, (err, collabs) => {
       if (err) console.error(err);
-      
-      for(c in collabs){
-        collabsByPerson[repoOwner][c] +=1;
-        console.log(collabsByPerson[repoOwner][c]);
-      }
-      
+      collabs.forEach((collab) => {
+        if (collabsByPerson[repoOwner][collab]){
+          collabsByPerson[repoOwner][collab] += 1;
+        } else {
+          collabsByPerson[reposByOwner][collab] = 1;
+        }
+        console.log(collabsByPerson[repoOwner][collab]);
+      })
+
 
       // collabsByPerson[repoOwner] = _.union(collabsByPerson[repoOwner], collabs);
       // collabsByPerson[repoOwn]
@@ -141,7 +144,7 @@ async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
       // console.log(CollabObj);
       // // cList.push(CollabObj);
       // // collabsByPerson[repoOwner] = collabsByPerson[repoOwner].concat(collabs);
-      
+
       // // collabsByPerson[repoOwner] = _.flatten(compressArray(collabsByPerson[repoOwner]));
       // // console.log(collabsByPerson[repoOwner]);
       innerCallback();
