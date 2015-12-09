@@ -131,3 +131,14 @@ Object.keys(collabsByPerson).forEach(person => {
   });
 });
 fs.writeFileSync(storedBDCollabsByPersonFile, JSON.stringify(collabsByPerson));
+
+//NOTE: max
+var max = 0;
+Object.keys(collabsByPerson).forEach(person => {
+  Object.keys(collabsByPerson[person]).forEach(collab => {
+    if(collabsByPerson[person][collab] > max){
+      max = collabsByPerson[person][collab];
+    }
+  });
+});
+console.log(max);
