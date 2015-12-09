@@ -87,27 +87,57 @@ reposByOwner = JSON.parse(fs.readFileSync(storedReposByOwnerFile, "utf-8"));
 // });
 // console.log(count);
 
-//NOTE: Generate Collabs
-// async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
-//   async.forEach(reposByOwner[repoOwner], (repo, innerCallback) => {
-//     getCollabsFromUserRepo(repoOwner, repo, (err, collabs) => {
-//       if (err) console.error(err);
-//       collabsByPerson[repoOwner] = _.union(collabsByPerson[repoOwner], collabs);
-//       innerCallback();
-//     });
-//   }, (err) => {
-//     outerCallback();
-//   });
-// }, (err) => {
-//   console.log("writing");
-//   fs.writeFileSync(storedCollabsByPersonFile, JSON.stringify(collabsByPerson));
-// });
-collabsByPerson = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, "utf-8"));
+
+// NOTE: Generate Collabs
+var cList = [];
+async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
+  collabsByPerson[repoOwner] = {};
+  async.forEach(reposByOwner[repoOwner], (repo, innerCallback) => {
+
+    getCollabsFromUserRepo(repoOwner, repo, (err, collabs) => {
+      if (err){
+        console.error(err);
+      } else{
+        collabs.forEach((collab) => {
+          if (collabsByPerson[repoOwner][collab]){
+            collabsByPerson[repoOwner][collab] += 1;
+          } else {
+            collabsByPerson[repoOwner][collab] = 1;
+          }
+        })
+      }
+      innerCallback();
+    });
+  }, (err) => {
+    outerCallback();
+  });
+}, (err) => {
+  console.log("writing");
+  fs.writeFileSync(storedCollabsByPersonFile, JSON.stringify(collabsByPerson));
+});
+// comment above back out
+//collabsByPerson = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, "utf-8"));
 
 //NOTE: Make collabs bi-directional
-Object.keys(collabsByPerson).forEach(person => {
-  collabsByPerson[person].forEach(collab => {
-    collabsByPerson[collab] = _.union(collabsByPerson[collab], [person]);
-  });
-});
-fs.writeFileSync(storedBDCollabsByPersonFile, JSON.stringify(collabsByPerson));
+
+// Object.keys(collabsByPerson).forEach(person => {
+//   collabsByPerson[person].forEach(collab => {
+//     console.log("bid");
+
+//     // var CollabObj = {};
+//     //   CollabObj.repoOwner = collab.toString();
+//       // CollabObj.collabs = _.union(collabsByPerson[collab], [person]);
+//       // CollabObj.collabs[person].count = 1;
+//       // collabsByPerson[collab] = _.union(collabsByPerson[collab], [person]);
+//       console.log(CollabObj);
+//       // cList.push(CollabObj);
+//     // collabsByPerson[collab] = _.union(collabsByPerson[collab], [person]);
+//     // // collabsByPerson[collab] = collabsByPerson[collab].concat([person]);
+//     // // console.log(collabsByPerson[collab]);
+//     // collabsByPerson[collab] = _.flatten(compressArray(collabsByPerson[collab]));
+//     // console.log(collabsByPerson[collab]);
+//   });
+// });
+// fs.writeFileSync(storedBDCollabsByPersonFile, JSON.stringify(collabsByPerson));
+
+//Dijkstra's
