@@ -29,7 +29,7 @@ var getUserRepos = (userName, callback) => {
   };
  
   request.get(options, (err, res, body) => {
-    if (!err && res.statusCode == 200) {
+    if (!err && res.statusCode === 200) {
       var info = JSON.parse(body);
       var repoNames = info.map(repo => repo.name);
       callback(null, repoNames);
@@ -63,11 +63,8 @@ var getCollabsFromUserRepo = (userName, repo, callback) => {
       }
       callback(null, collabs);
     }
-  })
+  });
 };
-
-// getCollabsFromUserRepo("benkahle", "bayesianGameofThrones", (err, collabs) => console.log(collabs));
-
 
 //NOTE: Generate Repos by Owners
 // async.forEach(namesList, (name, cb) => {
@@ -78,7 +75,7 @@ var getCollabsFromUserRepo = (userName, repo, callback) => {
 // }, (err) => {
 //   fs.writeFileSync(storedReposByOwnerFile, JSON.stringify(reposByOwner));
 // });
-reposByOwner = JSON.parse(fs.readFileSync(storedReposByOwnerFile, "utf-8"));
+// reposByOwner = JSON.parse(fs.readFileSync(storedReposByOwnerFile, "utf-8"));
 
 //NOTE: Count repositories (number of github requests to make)
 // var count = 0;
@@ -89,55 +86,48 @@ reposByOwner = JSON.parse(fs.readFileSync(storedReposByOwnerFile, "utf-8"));
 
 
 // NOTE: Generate Collabs
-var cList = [];
-async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
-  collabsByPerson[repoOwner] = {};
-  async.forEach(reposByOwner[repoOwner], (repo, innerCallback) => {
-
-    getCollabsFromUserRepo(repoOwner, repo, (err, collabs) => {
-      if (err){
-        console.error(err);
-      } else{
-        collabs.forEach((collab) => {
-          if (collabsByPerson[repoOwner][collab]){
-            collabsByPerson[repoOwner][collab] += 1;
-          } else {
-            collabsByPerson[repoOwner][collab] = 1;
-          }
-        })
-      }
-      innerCallback();
-    });
-  }, (err) => {
-    outerCallback();
-  });
-}, (err) => {
-  console.log("writing");
-  fs.writeFileSync(storedCollabsByPersonFile, JSON.stringify(collabsByPerson));
-});
+// async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
+//   collabsByPerson[repoOwner] = {};
+//   async.forEach(reposByOwner[repoOwner], (repo, innerCallback) => {
+//
+//     getCollabsFromUserRepo(repoOwner, repo, (err, collabs) => {
+//       if (err){
+//         console.error(err);
+//       } else{
+//         collabs.forEach((collab) => {
+//           if (collabsByPerson[repoOwner][collab]){
+//             collabsByPerson[repoOwner][collab] += 1;
+//           } else {
+//             collabsByPerson[repoOwner][collab] = 1;
+//           }
+//         })
+//       }
+//       innerCallback();
+//     });
+//   }, (err) => {
+//     outerCallback();
+//   });
+// }, (err) => {
+//   console.log("writing");
+//   fs.writeFileSync(storedCollabsByPersonFile, JSON.stringify(collabsByPerson));
+// });
 // comment above back out
-//collabsByPerson = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, "utf-8"));
+collabsByPerson = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, "utf-8"));
 
 //NOTE: Make collabs bi-directional
-
-// Object.keys(collabsByPerson).forEach(person => {
-//   collabsByPerson[person].forEach(collab => {
-//     console.log("bid");
-
-//     // var CollabObj = {};
-//     //   CollabObj.repoOwner = collab.toString();
-//       // CollabObj.collabs = _.union(collabsByPerson[collab], [person]);
-//       // CollabObj.collabs[person].count = 1;
-//       // collabsByPerson[collab] = _.union(collabsByPerson[collab], [person]);
-//       console.log(CollabObj);
-//       // cList.push(CollabObj);
-//     // collabsByPerson[collab] = _.union(collabsByPerson[collab], [person]);
-//     // // collabsByPerson[collab] = collabsByPerson[collab].concat([person]);
-//     // // console.log(collabsByPerson[collab]);
-//     // collabsByPerson[collab] = _.flatten(compressArray(collabsByPerson[collab]));
-//     // console.log(collabsByPerson[collab]);
-//   });
-// });
-// fs.writeFileSync(storedBDCollabsByPersonFile, JSON.stringify(collabsByPerson));
-
-//Dijkstra's
+Object.keys(collabsByPerson).forEach(person => {
+  Object.keys(collabsByPerson[person]).forEach(collab => {
+    if (collabsByPerson[collab]) {
+      if (collabsByPerson[collab][person]){
+        collabsByPerson[collab][person] += collabsByPerson[person][collab];
+        collabsByPerson[person][collab] = collabsByPerson[collab][person];
+      } else {
+        collabsByPerson[collab][person] = collabsByPerson[person][collab];
+      }
+    } else {
+      collabsByPerson[collab] = {};
+      collabsByPerson[collab][person] = collabsByPerson[person][collab];
+    }
+  });
+});
+fs.writeFileSync(storedBDCollabsByPersonFile, JSON.stringify(collabsByPerson));
