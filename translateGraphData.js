@@ -34,11 +34,11 @@ names.forEach(name => {
 });
 
 names.forEach(name => {
-  collabObject[name].forEach(linkedName => {
+  Object.keys(collabObject[name]).forEach(linkedName => {
     links.push({
       source: nodeIndices[name],
       target: nodeIndices[linkedName],
-      value: 2
+      value: collabObject[name][linkedName]
     });
   });
 });
