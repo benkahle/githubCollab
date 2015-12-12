@@ -1,241 +1,41 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-
-.node {
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
-
-.gnode-active .node{
-  stroke: red;
-  stroke-width: 2.5px;
-}
-
-.link {
-  fill: none;
-  stroke: #bbb;
-}
-
-text {
-  background-color: rgba(40,0,0,0);
-  baseline-shift: 7px;
-  display: none;
-}
-
-.gnode-active text {
-  fill: red;
-  display: block;
-}
-
-.gnode-connected text {
-  display: block;
-}
-</style>
-<body>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script>
-
-var width = 1400,
-    height = 900;
-
-var color = d3.scale.category20();
-
-var force = d3.layout.force()
-    .linkDistance(40)
-    .charge(-120)
-    .gravity(0.2)
-    .size([width, height]);
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-d3.json("https://raw.githubusercontent.com/benkahle/githubCollab/master/graph.json", function(error, graph) {
-  if (error) throw error;
-
-  // graph = {
-  //   nodes: [
-  //     {
-  //       name: "ben"
-  //     },
-  //     {
-  //       name: "austin"
-  //     },
-  //     {
-  //       name: "nitya"
-  //     },
-  //     {
-  //       name: "sean"
-  //     }
-  //   ],
-  //   links: [
-  //     {
-  //       source: 0,
-  //       target: 1,
-  //       value: 1
-  //     },
-  //     {
-  //       source: 1,
-  //       target: 2,
-  //       value: 10
-  //     },
-  //     {
-  //       source: 1,
-  //       target: 3,
-  //       value: 25
-  //     }
-  //   ]
-  // };
-
-  var nodes = graph.nodes.slice(),
-      // links = [],
-      links = graph.links.slice(),
-      bilinks = [];
-
-  // graph.links.forEach(function(link) {
-  //   var s = nodes[link.source],
-  //       t = nodes[link.target],
-  //       i = {}; // intermediate node
-  //   nodes.push(i);
-  //   links.push({source: s, target: i}, {source: i, target: t});
-  //   bilinks.push([s, i, t]);
-  // });
-
-  force
-      .nodes(nodes)
-      .links(links)
-      .start();
-
-  var link = svg.selectAll(".link")
-      // .data(bilinks)
-      .data(links)
-    .enter().append("path")
-      .attr("class", "link")
-      .style("stroke", function(d) {
-        var colors = [
-          "#0002ff",
-          "#0064ff",
-          "#00a4ff",
-          "#00ffd0",
-          "#00ff36",
-          "#65ff00",
-          "#b0ff00",
-          "#fdff00",
-          "#FFf000",
-          "#FFb400",
-          "#FFa000",
-          "#FF8c00",
-          "#FF7800",
-          "#FF6400",
-          "#FF5000",
-          "#FF3c00",
-          "#FF2800",
-          "#FF2800",
-          "#FF1400",
-          "#FF0000",
-          "#FF0000",
-          "#FF0050",
-          "#FF0050",
-          "#FF0050",
-          "#FF0050",
-          "#FF0050",
-          "#FF0050",
-          "#FF0050",
-        ];
-        return colors[d.value];
-      })
-      .style("opacity", function(d) {
-        if (d.value > 4) {
-          return 1;
-        } else if (d.value > 2) {
-          return d.value/5; //3/5 (.6) or 4/5 (.8)
-        } else if (d.value === 2){
-          return d.value/6; //2/6 (.3)
-        } else {
-          return 0.2; //(.2)
-        }
-      });
-
-  var gnodes = svg.selectAll("g.gnode")
-      .data(graph.nodes)
-      .enter().append("g").classed("gnode", true);
-
-  var node = gnodes.append("circle")
-      .attr("class", "node")
-      .attr("r", 4)
-      .style("fill", function(d) { return color(d.group); })
-      .call(force.drag)
-      .on("mouseover", fade(true)).on("mouseout", fade(false));
-
-  var labels = gnodes.append("text").text(function(d) { return d.name; });
-
-  node.append("title")
-      .text(function(d) { return d.name; });
-
-  var linkedByIndex = {};
-  graph.links.forEach(function(d) {
-    linkedByIndex[d.source.index + "," + d.target.index] = d.value;
-  });
-
-  function isConnected(a, b) {
-    if (linkedByIndex[a.index + "," + b.index]) {
-      return linkedByIndex[a.index + "," + b.index];
-    } else if (linkedByIndex[b.index + "," + a.index]) {
-      return linkedByIndex[b.index + "," + a.index];
-    } else {
-      return a.index === b.index;
-    }
-  }
-
-  function fade(mouseover) {
-    return function(d) {
-      var opacity = 1;
-      if (mouseover) {
-        d3.select(this.parentElement).attr("class", "gnode-active");
-        opacity = 0.1;
-      } else {
-        d3.select(this.parentElement).attr("class", "gnode");
-        opacity = 1;
-      }
-      node.style("stroke-opacity", function(o) {
-        var connectionWeight = isConnected(d, o);
-        var thisOpacity = connectionWeight ? 1 : opacity;
-        this.setAttribute('fill-opacity', thisOpacity);
-        if (mouseover) {
-          if (connectionWeight > 3) {
-            d3.select(this.parentElement).attr("class", "gnode-connected");
-          }
-        } else {
-          d3.select(this.parentElement).attr("class", "gnode");
-        }
-        return thisOpacity;
-      });
-
-      link.style("stroke-opacity", function(o) {
-        var thisOpacity;
-        if (o.source === d || o.target === d) {
-          if (o.value >= 5) {
-            thisOpacity = 1;
-          } else {
-            thisOpacity = o.value/3;
-          }
-        } else {
-          thisOpacity = opacity;
-        }
-        return thisOpacity;
-      });
-    };
-  }
-
-  force.on("tick", function() {
-    link.attr("d", function(d) {
-      return "M"+d.source.x+","+d.source.y + " "+d.target.x+","+d.target.y;
-    });
-    gnodes.attr("transform", function(d) {
-      return "translate(" + d.x + "," + d.y + ")";
-    });
-  });
-});
-
-</script>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+  </head>
+  <body>
+    <div class="menu">
+      <div class="label">
+        GraphHub
+      </div>
+      <div class="selections">
+        <div class="option">
+          <div class="option-label">Source:</div>
+          <select class="option-entry" id="source"></select>
+        </div>
+        <div class="option">
+          <div class="option-label">Target:</div>
+          <select class="option-entry" id="target"></select>
+        </div>
+        <div class="option">
+          <div class="option-label">Search Type:</div>
+          <div class="option-entry">
+            <input type="radio" name="search-type" id="shortest" value="shortest" checked>Shortest</input>
+            <input type="radio" name="search-type" id="shortest" value="longest">Longest</input>
+          </div>
+        </div>
+        <div class="option">
+          <button id="run">Find Path</button>
+          <button id="clear">Clear</button>
+        </div>
+      </div>
+      <div class="horizontal-line"></div>
+      <div id="results">
+        No path found
+      </div>
+    </div>
+  </body>
+  <script src="./visualizeGraph.js"></script>
+</html>
