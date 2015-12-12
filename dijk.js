@@ -1,5 +1,5 @@
 var fs = require('fs');
-var storedCollabsByPersonFile = "./collabsByPerson.json";
+var storedCollabsByPersonFile = "./bdCollabsByPerson.json";
 var vertices = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, 'utf8'));
 
 var args = process.argv.slice(2);
@@ -64,3 +64,4 @@ dijk = function (source, target){
 }
 
 module.exports = dijk;
+console.log(dijk(source,target));

@@ -1,12 +1,12 @@
 var fs = require('fs');
-var storedCollabsByPersonFile = "./mockCollabsByPerson.json";
+var storedCollabsByPersonFile = "./bdCollabsByPerson.json";
+var initVertices = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, 'utf8'));
 
 var args = process.argv.slice(2);
 var source = args[0];
 var target = args[1];
-
-bellmanFord = function (source, target){
-	var vertices = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, 'utf8'));
+var cycles = false;
+bellmanFord = function (source, target, vertices){
 
 	var dists = {};
 	var prev = {}
@@ -22,27 +22,49 @@ bellmanFord = function (source, target){
 	dists[source] = 0;
 	//start algorithm at the source
 	//while vertices are still graph
+
+	// for(var i=0; i<Object.keys(vertices).length-1; i++){
 	Object.keys(vertices).forEach((currentVertex)=>{
 		//store edges before deleting object
 		var currentEdges = vertices[currentVertex];
-
 		//find new shortest paths to all neighboring vertices if available
 		Object.keys(currentEdges).forEach((neighbor) => {
-			var testDist = -(currentEdges[neighbor]+dists[currentVertex]);
-			if(testDist > dists[neighbor] || dists[neighbor] === Infinity){
+			var testDist = -currentEdges[neighbor]+dists[currentVertex];
+			if(testDist < dists[neighbor]){
 				prev[neighbor] = currentVertex;
 				dists[neighbor] = testDist;
 			}
 		});
 	})
+	// }
 	//prepend the target to the list
+	// console.log(prev["sgrim3"])
+	currentVertex = target;
 	path.unshift(currentVertex);
-	while(prev[currentVertex] != undefined){
+	while(prev[currentVertex] != source){
+		console.log("VERTEX:",currentVertex);
+		console.log("EDGES:",vertices[currentVertex]);
+		console.log("PREV:",prev[currentVertex]);
 		//preprend prev to list and set new current to be the previous
-		path.unshift(prev[currentVertex])
-		currentVertex = prev[currentVertex]
+		if(path.indexOf(prev[currentVertex])==-1){
+			path.unshift(prev[currentVertex])
+			currentVertex = prev[currentVertex]
+		} else{
+			console.log("CYCLE IS:",currentVertex, "to", prev[currentVertex]);
+			// console.log(vertices[currentVertex][prev[currentVertex]]);
+			vertices[currentVertex][prev[currentVertex]] = -10;
+			// console.log(vertices[currentVertex][prev[currentVertex]]);
+			cycles = true;
+			break
+		}
 	}
-	return path;
+	if(!cycles){
+		path.unshift(source)
+		return path;
+	} else {
+		console.log("RECURRRRRRRR")
+		return bellmanFord(source, target, vertices)
+	}
 }
-console.log(bellmanFord(source, target))
-module.exports = reverseDijk;
+console.log(bellmanFord(source, target, initVertices))
+module.exports = bellmanFord;
