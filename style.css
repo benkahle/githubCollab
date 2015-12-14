@@ -46,11 +46,13 @@ body {
 
 .menu {
   width: 250px;
-  height: 100vh;
+  height: calc(100vh - 40px);
   flex: 0 1 auto;
-  background-color: rgb(200,200,200);
+  background-color: #FAFAFA;
   display: flex;
   flex-direction: column;
+  margin:20px 0 20px 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.26);
 }
 
 .label {
@@ -77,17 +79,33 @@ body {
 
 .option-label {
   display: inline-block;
+  width: 75px;
 }
 
 .option-entry {
-  margin-left: 10px;
+  display: inline-block;
+}
+
+.dropdown {
+  border: 1px solid #111;
+  background: transparent;
+  width: calc(100% - 100px);
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   display: inline-block;
 }
 
 .horizontal-line {
   padding: 10px 0 10px 0;
   width: 100%;
-  border-bottom: 1px solid black;
+  border-bottom: 1px dashed #9E9E9E;
 }
 
 #results {

@@ -1,5 +1,7 @@
-var width = 1400,
-    height = 900;
+var width = 1400 - 20,
+    height = 900-40;
+
+var margin = 20;
 
 var color = d3.scale.category20();
 
@@ -12,6 +14,7 @@ var force = d3.layout.force()
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
+    .attr("transform", "translate("+margin+","+margin+")")
     .attr("class", "graph");
 d3.json("https://raw.githubusercontent.com/benkahle/githubCollab/master/bdCollabsByPerson.json", function(error1, fullData) {
   if (error1) throw error1;
