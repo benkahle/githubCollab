@@ -1,10 +1,6 @@
-// var fs = require('fs');
-// var storedCollabsByPersonFile = "./bdCollabsByPerson.json";
-// var vertices = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, 'utf8'));
-//
-// var args = process.argv.slice(2);
-// var source = args[0];
-// var target = args[1];
+var fs = require('fs');
+var storedCollabsByPersonFile = "./collabsByPerson.json";
+var vertices = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, 'utf8'));
 
 dijk = function (source, target, graph){
 
@@ -50,7 +46,7 @@ dijk = function (source, target, graph){
 		} else {
 			//find new shortest paths to all neighboring vertices if available
 			Object.keys(currentEdges).forEach((neighbor) => {
-				var testDist = currentEdges[neighbor]+dists[currentVertex];
+				var testDist = (1.0/currentEdges[neighbor])+dists[currentVertex];
 				if(testDist < dists[neighbor]){
 					prev[neighbor] = currentVertex;
 					dists[neighbor] = testDist;
