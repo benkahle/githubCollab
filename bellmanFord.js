@@ -23,20 +23,20 @@ bellmanFord = function (source, target, vertices){
 	//start algorithm at the source
 	//while vertices are still graph
 
-	// for(var i=0; i<Object.keys(vertices).length-1; i++){
-	Object.keys(vertices).forEach((currentVertex)=>{
-		//store edges before deleting object
-		var currentEdges = vertices[currentVertex];
-		//find new shortest paths to all neighboring vertices if available
-		Object.keys(currentEdges).forEach((neighbor) => {
-			var testDist = -currentEdges[neighbor]+dists[currentVertex];
-			if(testDist < dists[neighbor]){
-				prev[neighbor] = currentVertex;
-				dists[neighbor] = testDist;
-			}
-		});
-	})
-	// }
+	for(var i=0; i<Object.keys(vertices).length-1; i++){
+		Object.keys(vertices).forEach((currentVertex)=>{
+			//store edges before deleting object
+			var currentEdges = vertices[currentVertex];
+			//find new shortest paths to all neighboring vertices if available
+			Object.keys(currentEdges).forEach((neighbor) => {
+				var testDist = -currentEdges[neighbor]+dists[currentVertex];
+				if(testDist < dists[neighbor]){
+					prev[neighbor] = currentVertex;
+					dists[neighbor] = testDist;
+				}
+			});
+		})
+	}
 	//prepend the target to the list
 	// console.log(prev["sgrim3"])
 	currentVertex = target;
@@ -51,7 +51,7 @@ bellmanFord = function (source, target, vertices){
 			currentVertex = prev[currentVertex]
 		} else{
 			console.log("CYCLE IS:",currentVertex, "to", prev[currentVertex]);
-			// console.log(vertices[currentVertex][prev[currentVertex]]);
+			console.log(vertices[currentVertex][prev[currentVertex]]);
 			vertices[currentVertex][prev[currentVertex]] = -10;
 			// console.log(vertices[currentVertex][prev[currentVertex]]);
 			cycles = true;
