@@ -61,10 +61,16 @@ d3.json("https://raw.githubusercontent.com/benkahle/githubCollab/master/bdCollab
 
     var nodesByName = {};
 
+    var names = [];
     nodes.forEach(function(node, i) {
+      names.push(node.name);
+    });
+
+    names.sort();
+    names.forEach(function(name) {
       var option = document.createElement("option");
-      option.value = node.name;
-      option.text = node.name;
+      option.value = name;
+      option.text = name;
       sourceList.add(option);
       var option2 = option.cloneNode(true);
       targetList.add(option2);
@@ -234,10 +240,15 @@ d3.json("https://raw.githubusercontent.com/benkahle/githubCollab/master/bdCollab
       } else {
 
       }
-      var stringResults = "Path:\n\n"+resultsList.join("\n");
-      results.textContent = stringResults;
       resetStyling();
-      focusPath(resultsList);
+      var stringResults;
+      if (resultsList.length > 0) {
+        stringResults = "Path: (Length: "+resultsList.length+")\n\n"+resultsList.join("\n");
+        focusPath(resultsList);
+      } else {
+        stringResults = "No path found";
+      }
+      results.textContent = stringResults;
     };
 
     document.getElementById("clear").onclick = function() {
@@ -348,26 +359,31 @@ d3.json("https://raw.githubusercontent.com/benkahle/githubCollab/master/bdCollab
     		//delete the current vertex from graph because we have now visited it
     		delete vertices[currentVertex];
 
-    		//find new shortest paths to all neighboring vertices if available
-    		Object.keys(currentEdges).forEach((neighbor) => {
-    			var testDist = currentEdges[neighbor]+dists[currentVertex];
-    			if(testDist < dists[neighbor]){
-    				prev[neighbor] = currentVertex;
-    				dists[neighbor] = testDist;
-    			}
-    		});
+        // If no more edges, no path is possible
+        if (!currentEdges) {
+          return [];
+        } else {
+          //find new shortest paths to all neighboring vertices if available
+          Object.keys(currentEdges).forEach((neighbor) => {
+            var testDist = currentEdges[neighbor]+dists[currentVertex];
+            if(testDist < dists[neighbor]){
+              prev[neighbor] = currentVertex;
+              dists[neighbor] = testDist;
+            }
+          });
 
-    		//if our current vertex is the target, go down the prev tree to find the whole path
-    		if(currentVertex === target){
-    			//prepend the target to the list
-    			path.unshift(currentVertex);
-    			while(prev[currentVertex] != undefined){
-    				//preprend prev to list and set new current to be the previous
-    				path.unshift(prev[currentVertex])
-    				currentVertex = prev[currentVertex]
-    			}
-    			return path;
-    		}
+          //if our current vertex is the target, go down the prev tree to find the whole path
+          if(currentVertex === target){
+            //prepend the target to the list
+            path.unshift(currentVertex);
+            while(prev[currentVertex] != undefined){
+              //preprend prev to list and set new current to be the previous
+              path.unshift(prev[currentVertex])
+              currentVertex = prev[currentVertex]
+            }
+            return path;
+          }
+        }
     	}
     }
   });

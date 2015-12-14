@@ -1,16 +1,20 @@
-var fs = require('fs');
-var storedCollabsByPersonFile = "./bdCollabsByPerson.json";
-var vertices = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, 'utf8'));
+// var fs = require('fs');
+// var storedCollabsByPersonFile = "./bdCollabsByPerson.json";
+// var vertices = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, 'utf8'));
+//
+// var args = process.argv.slice(2);
+// var source = args[0];
+// var target = args[1];
 
-var args = process.argv.slice(2);
-var source = args[0];
-var target = args[1];
-
-dijk = function (source, target){
+dijk = function (source, target, graph){
 
 	var dists = {};
 	var prev = {}
 	var path = []
+	if (graph) {
+		vertices = graph;
+	}
+	vertices = JSON.parse(JSON.stringify(vertices));
 
 	//Set inital distances to infinity (and beyond) and set neighbor on shortest path from the source to undefined for all vertices
 	Object.keys(vertices).forEach((key) => {
@@ -40,28 +44,33 @@ dijk = function (source, target){
 		//delete the current vertex from graph because we have now visited it
 		delete vertices[currentVertex];
 
-		//find new shortest paths to all neighboring vertices if available
-		Object.keys(currentEdges).forEach((neighbor) => {
-			var testDist = currentEdges[neighbor]+dists[currentVertex];
-			if(testDist < dists[neighbor]){
-				prev[neighbor] = currentVertex;
-				dists[neighbor] = testDist;
-			}
-		});
+		// If no more edges, no path is possible
+		if (!currentEdges) {
+			return [];
+		} else {
+			//find new shortest paths to all neighboring vertices if available
+			Object.keys(currentEdges).forEach((neighbor) => {
+				var testDist = currentEdges[neighbor]+dists[currentVertex];
+				if(testDist < dists[neighbor]){
+					prev[neighbor] = currentVertex;
+					dists[neighbor] = testDist;
+				}
+			});
 
-		//if our current vertex is the target, go down the prev tree to find the whole path
-		if(currentVertex === target){
-			//prepend the target to the list
-			path.unshift(currentVertex);
-			while(prev[currentVertex] != undefined){
-				//preprend prev to list and set new current to be the previous
-				path.unshift(prev[currentVertex])
-				currentVertex = prev[currentVertex]
+			//if our current vertex is the target, go down the prev tree to find the whole path
+			if(currentVertex === target){
+				//prepend the target to the list
+				path.unshift(currentVertex);
+				while(prev[currentVertex] != undefined){
+					//preprend prev to list and set new current to be the previous
+					path.unshift(prev[currentVertex])
+					currentVertex = prev[currentVertex]
+				}
+				return path;
 			}
-			return path;
 		}
 	}
 }
 
 module.exports = dijk;
-console.log(dijk(source,target));
+// console.log(dijk(source,target));
