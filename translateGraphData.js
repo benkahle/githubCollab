@@ -1,8 +1,8 @@
 var fs = require('fs');
 
-var storedBDCollabsByPersonFile = "./bdCollabsByPerson.json";
+var storedCollabsByPersonFile = "./collabsByPerson.json";
 var graphFile = "./graph.json";
-var collabObject = JSON.parse(fs.readFileSync(storedBDCollabsByPersonFile, "utf-8"));
+var collabObject = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, "utf-8"));
 
 // {
 //   nodes: [
@@ -35,6 +35,13 @@ names.forEach(name => {
 
 names.forEach(name => {
   Object.keys(collabObject[name]).forEach(linkedName => {
+    if (!nodeIndices[linkedName]) {
+      var length = nodes.push({
+        name: linkedName,
+        group: 1
+      });
+      nodeIndices[linkedName] = length - 1;
+    }
     links.push({
       source: nodeIndices[name],
       target: nodeIndices[linkedName],
