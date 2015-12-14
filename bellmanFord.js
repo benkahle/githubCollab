@@ -1,13 +1,13 @@
 var fs = require('fs');
-var storedCollabsByPersonFile = "./bdCollabsByPerson.json";
+var storedCollabsByPersonFile = "./collabsByPerson.json";
 var initVertices = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, 'utf8'));
 
 var args = process.argv.slice(2);
 var source = args[0];
 var target = args[1];
-var cycles = false;
 bellmanFord = function (source, target, vertices){
 
+	var cycles = false;
 	var dists = {};
 	var prev = {}
 	var path = []
@@ -29,7 +29,7 @@ bellmanFord = function (source, target, vertices){
 			var currentEdges = vertices[currentVertex];
 			//find new shortest paths to all neighboring vertices if available
 			Object.keys(currentEdges).forEach((neighbor) => {
-				var testDist = -currentEdges[neighbor]+dists[currentVertex];
+				var testDist = (-1.0/currentEdges[neighbor])+dists[currentVertex];
 				if(testDist < dists[neighbor]){
 					prev[neighbor] = currentVertex;
 					dists[neighbor] = testDist;
@@ -38,21 +38,20 @@ bellmanFord = function (source, target, vertices){
 		})
 	}
 	//prepend the target to the list
-	// console.log(prev["sgrim3"])
 	currentVertex = target;
 	path.unshift(currentVertex);
+	// console.log(prev);
 	while(prev[currentVertex] != source){
-		console.log("VERTEX:",currentVertex);
-		console.log("EDGES:",vertices[currentVertex]);
-		console.log("PREV:",prev[currentVertex]);
+		// console.log("VERTEX:",currentVertex);
+		// console.log("PREV:",prev[currentVertex]);
 		//preprend prev to list and set new current to be the previous
 		if(path.indexOf(prev[currentVertex])==-1){
 			path.unshift(prev[currentVertex])
 			currentVertex = prev[currentVertex]
 		} else{
-			console.log("CYCLE IS:",currentVertex, "to", prev[currentVertex]);
-			console.log(vertices[currentVertex][prev[currentVertex]]);
-			vertices[currentVertex][prev[currentVertex]] = -10;
+			// console.log("CYCLE IS:",currentVertex, "to", prev[currentVertex]);
+			// console.log(vertices[prev[currentVertex]][currentVertex]);
+			delete vertices[prev[currentVertex]][currentVertex] //= -10;
 			// console.log(vertices[currentVertex][prev[currentVertex]]);
 			cycles = true;
 			break
@@ -62,7 +61,7 @@ bellmanFord = function (source, target, vertices){
 		path.unshift(source)
 		return path;
 	} else {
-		console.log("RECURRRRRRRR")
+		// console.log("RECURRRRRRRR")
 		return bellmanFord(source, target, vertices)
 	}
 }
