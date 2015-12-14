@@ -1,0 +1,96 @@
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.gnode-active .node{
+  stroke: red;
+  stroke-width: 2.5px;
+}
+
+.link {
+  fill: none;
+  stroke: #bbb;
+}
+
+.connected-link {
+  stroke: red;
+  opacity: 1;
+}
+
+text {
+  background-color: rgba(40,0,0,0);
+  baseline-shift: 7px;
+  display: none;
+}
+
+.gnode-active text {
+  fill: red;
+  display: block;
+}
+
+.gnode-connected text {
+  display: block;
+}
+
+.gnode-connected .node {
+  stroke: green;
+  stroke-width: 2.5px
+}
+
+body {
+  display: flex;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.menu {
+  width: 250px;
+  height: 100vh;
+  flex: 0 1 auto;
+  background-color: rgb(200,200,200);
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  padding-top: 30px;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+  flex: 0 1 auto;
+}
+
+.graph {
+  flex: 0 1 auto;
+}
+
+.selections {
+  padding-top: 20px;
+  padding-left: 20px;
+}
+
+.option {
+  padding-top: 10px;
+  display: block;
+}
+
+.option-label {
+  display: inline-block;
+}
+
+.option-entry {
+  margin-left: 10px;
+  display: inline-block;
+}
+
+.horizontal-line {
+  padding: 10px 0 10px 0;
+  width: 100%;
+  border-bottom: 1px solid black;
+}
+
+#results {
+  padding: 20px 20px 0 20px;
+  white-space: pre-wrap;
+}
