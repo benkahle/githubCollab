@@ -1,0 +1,326 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .2em;"><table><tr><td><pre style="margin: 0; line-height: 125%">  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">var</span> fs <span style="color: #333333">=</span> require(<span style="background-color: #fff0f0">&#39;fs&#39;</span>);
+<span style="color: #008800; font-weight: bold">var</span> request <span style="color: #333333">=</span> require(<span style="background-color: #fff0f0">&#39;request&#39;</span>);
+<span style="color: #008800; font-weight: bold">var</span> async <span style="color: #333333">=</span> require(<span style="background-color: #fff0f0">&#39;async&#39;</span>);
+<span style="color: #008800; font-weight: bold">var</span> _ <span style="color: #333333">=</span> require(<span style="background-color: #fff0f0">&#39;lodash&#39;</span>);
+require(<span style="background-color: #fff0f0">&#39;dotenv&#39;</span>).load();
+
+<span style="color: #008800; font-weight: bold">var</span> apiRoot <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;https://api.github.com&quot;</span>;
+<span style="color: #008800; font-weight: bold">var</span> API_KEY <span style="color: #333333">=</span> process.env.OAUTH_TOKEN;
+<span style="color: #008800; font-weight: bold">var</span> oAuthAppend <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;?access_token=&quot;</span> <span style="color: #333333">+</span> API_KEY;
+<span style="color: #008800; font-weight: bold">var</span> standardHeaders <span style="color: #333333">=</span> {
+  <span style="background-color: #fff0f0">&quot;User-Agent&quot;</span><span style="color: #333333">:</span> <span style="background-color: #fff0f0">&quot;benkahle&quot;</span>
+};
+
+<span style="color: #008800; font-weight: bold">var</span> storedReposByOwnerFile <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;./reposByOwner.json&quot;</span>;
+<span style="color: #008800; font-weight: bold">var</span> storedCollabsByPersonFile <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;./collabsByPerson.json&quot;</span>;
+<span style="color: #008800; font-weight: bold">var</span> storedBDCollabsByPersonFile <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;./bdCollabsByPerson.json&quot;</span>;
+
+<span style="color: #008800; font-weight: bold">var</span> namesList <span style="color: #333333">=</span> fs.readFileSync(<span style="background-color: #fff0f0">&quot;./githubnames.txt&quot;</span>, <span style="background-color: #fff0f0">&quot;utf-8&quot;</span>).split(<span style="background-color: #fff0f0">&quot;\n&quot;</span>).slice(<span style="color: #0000DD; font-weight: bold">0</span>,<span style="color: #333333">-</span><span style="color: #0000DD; font-weight: bold">1</span>);
+
+<span style="color: #888888">//Users -&gt; Repos</span>
+<span style="color: #008800; font-weight: bold">var</span> reposByOwner <span style="color: #333333">=</span> {};
+<span style="color: #888888">//Repos -&gt; Collaborators(users)</span>
+<span style="color: #008800; font-weight: bold">var</span> collabsByPerson<span style="color: #333333">=</span> {};
+
+<span style="color: #888888">// Get repositories by a github username</span>
+<span style="color: #008800; font-weight: bold">var</span> getUserRepos <span style="color: #333333">=</span> (userName, callback) <span style="color: #333333">=&gt;</span> {
+  <span style="color: #008800; font-weight: bold">var</span> options <span style="color: #333333">=</span> {
+    url<span style="color: #333333">:</span> <span style="color: #FF0000; background-color: #FFAAAA">`</span>${apiRoot}<span style="color: #333333">/</span>users<span style="color: #333333">/</span>${userName}<span style="color: #333333">/</span>repos${oAuthAppend}<span style="color: #FF0000; background-color: #FFAAAA">`</span>,
+    headers<span style="color: #333333">:</span> standardHeaders
+  };
+<span style="color: #FF0000; background-color: #FFAAAA"> </span>
+  request.get(options, (err, res, body) <span style="color: #333333">=&gt;</span> {
+    <span style="color: #008800; font-weight: bold">if</span> (<span style="color: #333333">!</span>err <span style="color: #333333">&amp;&amp;</span> res.statusCode <span style="color: #333333">===</span> <span style="color: #0000DD; font-weight: bold">200</span>) {
+      <span style="color: #008800; font-weight: bold">var</span> info <span style="color: #333333">=</span> JSON.parse(body);
+      <span style="color: #888888">// Grab just the list of repository names from the response</span>
+      <span style="color: #008800; font-weight: bold">var</span> repoNames <span style="color: #333333">=</span> info.map(repo <span style="color: #333333">=&gt;</span> repo.name);
+      callback(<span style="color: #008800; font-weight: bold">null</span>, repoNames);
+    }
+  });
+};
+
+<span style="color: #888888">// Get list of collaborators from a user&#39;s repository</span>
+<span style="color: #008800; font-weight: bold">var</span> getCollabsFromUserRepo <span style="color: #333333">=</span> (userName, repo, callback) <span style="color: #333333">=&gt;</span> {
+  console.log(userName, repo);
+  <span style="color: #008800; font-weight: bold">var</span> options <span style="color: #333333">=</span> {
+    url<span style="color: #333333">:</span> <span style="color: #FF0000; background-color: #FFAAAA">`</span>${apiRoot}<span style="color: #333333">/</span>repos<span style="color: #333333">/</span>${userName}<span style="color: #333333">/</span>${repo}<span style="color: #333333">/</span>contributors${oAuthAppend}<span style="color: #FF0000; background-color: #FFAAAA">`</span>,
+    headers<span style="color: #333333">:</span> standardHeaders
+  };
+
+  request.get(options, (err, res, body) <span style="color: #333333">=&gt;</span> {
+    <span style="color: #008800; font-weight: bold">if</span> (err) {
+      console.log(err);
+      callback(err);
+    } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (res.statusCode <span style="color: #333333">!==</span> <span style="color: #0000DD; font-weight: bold">200</span>) {
+      <span style="color: #888888">//empty repositories result in 204:</span>
+      <span style="color: #008800; font-weight: bold">if</span> (res.statusCode <span style="color: #333333">!==</span> <span style="color: #0000DD; font-weight: bold">204</span>) {
+        <span style="color: #888888">// No idea what went wrong, log to investigate</span>
+        console.log(res);
+      }
+      <span style="color: #888888">// Send error that no data was found</span>
+      callback(<span style="background-color: #fff0f0">&quot;no data&quot;</span>);
+    } <span style="color: #008800; font-weight: bold">else</span> {
+      <span style="color: #008800; font-weight: bold">var</span> info <span style="color: #333333">=</span> JSON.parse(body);
+      <span style="color: #888888">// Get just the collaborators&#39; usernames</span>
+      <span style="color: #008800; font-weight: bold">var</span> collabs <span style="color: #333333">=</span> info.map(collab <span style="color: #333333">=&gt;</span> collab.login);
+      <span style="color: #888888">// Remove yourself from list of collaborators</span>
+      <span style="color: #008800; font-weight: bold">if</span> (collabs.indexOf(userName) <span style="color: #333333">!==</span> <span style="color: #333333">-</span><span style="color: #0000DD; font-weight: bold">1</span>) {
+        collabs.splice(collabs.indexOf(userName), <span style="color: #0000DD; font-weight: bold">1</span>);
+      }
+      callback(<span style="color: #008800; font-weight: bold">null</span>, collabs);
+    }
+  });
+};
+
+<span style="color: #888888">//NOTE: Generate Repos by Owners</span>
+async.forEach(namesList, (name, cb) <span style="color: #333333">=&gt;</span> {
+  getUserRepos(name, (err, repos) <span style="color: #333333">=&gt;</span> {
+    reposByOwner[name] <span style="color: #333333">=</span> repos;
+    cb();
+  });
+}, (err) <span style="color: #333333">=&gt;</span> {
+  fs.writeFileSync(storedReposByOwnerFile, JSON.stringify(reposByOwner));
+});
+<span style="color: #888888">// Use cached data instead of querying Github again</span>
+<span style="color: #888888">// reposByOwner = JSON.parse(fs.readFileSync(storedReposByOwnerFile, &quot;utf-8&quot;));</span>
+
+<span style="color: #888888">//NOTE: Count repositories (number of github requests to make)</span>
+<span style="color: #888888">// var count = 0;</span>
+<span style="color: #888888">// Object.keys(reposByOwner).forEach(owner =&gt; {</span>
+<span style="color: #888888">//   reposByOwner[owner].forEach(repo =&gt; count++)</span>
+<span style="color: #888888">// });</span>
+<span style="color: #888888">// console.log(count);</span>
+
+
+<span style="color: #888888">// NOTE: Generate Collabs</span>
+async.forEach(<span style="color: #007020">Object</span>.keys(reposByOwner), (repoOwner, outerCallback) <span style="color: #333333">=&gt;</span> {
+  collabsByPerson[repoOwner] <span style="color: #333333">=</span> {};
+  async.forEach(reposByOwner[repoOwner], (repo, innerCallback) <span style="color: #333333">=&gt;</span> {
+
+    getCollabsFromUserRepo(repoOwner, repo, (err, collabs) <span style="color: #333333">=&gt;</span> {
+      <span style="color: #008800; font-weight: bold">if</span> (err){
+        console.error(err);
+      } <span style="color: #008800; font-weight: bold">else</span>{
+        collabs.forEach((collab) <span style="color: #333333">=&gt;</span> {
+          <span style="color: #008800; font-weight: bold">if</span> (collabsByPerson[repoOwner][collab]){
+            collabsByPerson[repoOwner][collab] <span style="color: #333333">+=</span> <span style="color: #0000DD; font-weight: bold">1</span>;
+            <span style="color: #008800; font-weight: bold">if</span>(collabsByPerson[collab]){
+              <span style="color: #008800; font-weight: bold">if</span>(collabsByPerson[collab][repoOwner]){
+
+                <span style="color: #008800; font-weight: bold">delete</span> collabsByPerson[collab][repoOwner];
+              }
+            }
+          } <span style="color: #008800; font-weight: bold">else</span> {
+            collabsByPerson[repoOwner][collab] <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span>;
+            <span style="color: #008800; font-weight: bold">if</span>(collabsByPerson[collab]){
+              <span style="color: #008800; font-weight: bold">if</span>(collabsByPerson[collab][repoOwner]){
+
+                <span style="color: #008800; font-weight: bold">delete</span> collabsByPerson[collab][repoOwner];
+              }
+            }
+          }
+        })
+      }
+      innerCallback();
+    });
+  }, (err) <span style="color: #333333">=&gt;</span> {
+    outerCallback();
+  });
+}, (err) <span style="color: #333333">=&gt;</span> {
+  console.log(<span style="background-color: #fff0f0">&quot;writing&quot;</span>);
+  fs.writeFileSync(storedCollabsByPersonFile, JSON.stringify(collabsByPerson));
+});
+<span style="color: #888888">// Use cached data instead of querying Github again</span>
+<span style="color: #888888">// collabsByPerson = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, &quot;utf-8&quot;));</span>
+
+<span style="color: #888888">//NOTE: Make collaborator data bi-directional</span>
+<span style="color: #007020">Object</span>.keys(collabsByPerson).forEach(person <span style="color: #333333">=&gt;</span> {
+  <span style="color: #007020">Object</span>.keys(collabsByPerson[person]).forEach(collab <span style="color: #333333">=&gt;</span> {
+    <span style="color: #008800; font-weight: bold">if</span> (collabsByPerson[collab]) {
+      <span style="color: #008800; font-weight: bold">if</span> (collabsByPerson[collab][person]){
+        collabsByPerson[collab][person] <span style="color: #333333">+=</span> collabsByPerson[person][collab];
+        collabsByPerson[person][collab] <span style="color: #333333">=</span> collabsByPerson[collab][person];
+      } <span style="color: #008800; font-weight: bold">else</span> {
+        collabsByPerson[collab][person] <span style="color: #333333">=</span> collabsByPerson[person][collab];
+      }
+    } <span style="color: #008800; font-weight: bold">else</span> {
+      collabsByPerson[collab] <span style="color: #333333">=</span> {};
+      collabsByPerson[collab][person] <span style="color: #333333">=</span> collabsByPerson[person][collab];
+    }
+  });
+});
+fs.writeFileSync(storedBDCollabsByPersonFile, JSON.stringify(collabsByPerson));
+
+<span style="color: #888888">//NOTE: Find the most collaborations between any two people</span>
+<span style="color: #008800; font-weight: bold">var</span> max <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+<span style="color: #007020">Object</span>.keys(collabsByPerson).forEach(person <span style="color: #333333">=&gt;</span> {
+  <span style="color: #007020">Object</span>.keys(collabsByPerson[person]).forEach(collab <span style="color: #333333">=&gt;</span> {
+    <span style="color: #008800; font-weight: bold">if</span>(collabsByPerson[person][collab] <span style="color: #333333">&gt;</span> max){
+      max <span style="color: #333333">=</span> collabsByPerson[person][collab];
+    }
+  });
+});
+console.log(max);
+</pre></td></tr></table></div>

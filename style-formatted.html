@@ -1,0 +1,246 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .2em;"><table><tr><td><pre style="margin: 0; line-height: 125%">  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #BB0066; font-weight: bold">.node</span> {
+  stroke<span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">#fff</span>;
+  fill<span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">rgb</span>(<span style="color: #6600EE; font-weight: bold">31</span><span style="color: #333333">,</span> <span style="color: #6600EE; font-weight: bold">119</span><span style="color: #333333">,</span> <span style="color: #6600EE; font-weight: bold">180</span>);
+  stroke<span style="color: #333333">-</span><span style="color: #008800; font-weight: bold">width</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">1.5px</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.gnode-active</span> <span style="color: #BB0066; font-weight: bold">.node</span>{
+  stroke<span style="color: #333333">:</span> <span style="color: #007020">red</span>;
+  stroke<span style="color: #333333">-</span><span style="color: #008800; font-weight: bold">width</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">2.5px</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.link</span> {
+  fill<span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">none</span>;
+  stroke<span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">#bbb</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.connected-link</span> {
+  stroke<span style="color: #333333">:</span> <span style="color: #007020">red</span>;
+  <span style="color: #008800; font-weight: bold">opacity</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">1</span>;
+}
+
+<span style="color: #007700">text</span> {
+  <span style="color: #008800; font-weight: bold">background-color</span><span style="color: #333333">:</span> rgba(<span style="color: #6600EE; font-weight: bold">40</span><span style="color: #333333">,</span><span style="color: #6600EE; font-weight: bold">0</span><span style="color: #333333">,</span><span style="color: #6600EE; font-weight: bold">0</span><span style="color: #333333">,</span><span style="color: #6600EE; font-weight: bold">0</span>);
+  <span style="color: #008800; font-weight: bold">baseline</span><span style="color: #333333">-</span>shift<span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">7px</span>;
+  <span style="color: #008800; font-weight: bold">display</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">none</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.gnode-active</span> <span style="color: #007700">text</span> {
+  fill<span style="color: #333333">:</span> <span style="color: #007020">red</span>;
+  <span style="color: #008800; font-weight: bold">display</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">block</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.gnode-connected</span> <span style="color: #007700">text</span> {
+  <span style="color: #008800; font-weight: bold">display</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">block</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.gnode-connected</span> <span style="color: #BB0066; font-weight: bold">.node</span> {
+  stroke<span style="color: #333333">:</span> <span style="color: #007020">orange</span>;
+  fill<span style="color: #333333">:</span> <span style="color: #007020">yellow</span>;
+  stroke<span style="color: #333333">-</span><span style="color: #008800; font-weight: bold">width</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">2.5px</span>
+}
+
+<span style="color: #BB0066; font-weight: bold">.gnode-linked</span> <span style="color: #BB0066; font-weight: bold">.node</span> {
+  stroke<span style="color: #333333">:</span> <span style="color: #007020">orange</span>;
+  stroke<span style="color: #333333">-</span><span style="color: #008800; font-weight: bold">width</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">2.5px</span>
+}
+
+<span style="color: #007700">body</span> {
+  <span style="color: #008800; font-weight: bold">display</span><span style="color: #333333">:</span> flex;
+  <span style="color: #008800; font-weight: bold">margin</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">0</span>;
+  <span style="color: #008800; font-weight: bold">font-family</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">sans-serif</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.menu</span> {
+  <span style="color: #008800; font-weight: bold">width</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">250px</span>;
+  <span style="color: #008800; font-weight: bold">height</span><span style="color: #333333">:</span> calc(<span style="color: #6600EE; font-weight: bold">100</span>vh <span style="color: #333333">-</span> <span style="color: #6600EE; font-weight: bold">40px</span>);
+  flex<span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">0</span> <span style="color: #6600EE; font-weight: bold">1</span> <span style="color: #008800; font-weight: bold">auto</span>;
+  <span style="color: #008800; font-weight: bold">background-color</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">#FAFAFA</span>;
+  <span style="color: #008800; font-weight: bold">display</span><span style="color: #333333">:</span> flex;
+  flex<span style="color: #333333">-</span><span style="color: #008800; font-weight: bold">direction</span><span style="color: #333333">:</span> column;
+  <span style="color: #008800; font-weight: bold">margin</span><span style="color: #333333">:</span><span style="color: #6600EE; font-weight: bold">20px</span> <span style="color: #6600EE; font-weight: bold">0</span> <span style="color: #6600EE; font-weight: bold">20px</span> <span style="color: #6600EE; font-weight: bold">20px</span>;
+  box<span style="color: #333333">-</span>shadow<span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">0</span> <span style="color: #6600EE; font-weight: bold">2px</span> <span style="color: #6600EE; font-weight: bold">5px</span> rgba(<span style="color: #6600EE; font-weight: bold">0</span><span style="color: #333333">,</span><span style="color: #6600EE; font-weight: bold">0</span><span style="color: #333333">,</span><span style="color: #6600EE; font-weight: bold">0</span><span style="color: #333333">,</span><span style="color: #6600EE; font-weight: bold">0</span><span style="color: #333333">.</span><span style="color: #6600EE; font-weight: bold">26</span>);
+}
+
+<span style="color: #BB0066; font-weight: bold">.label</span> {
+  <span style="color: #008800; font-weight: bold">padding-top</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">30px</span>;
+  <span style="color: #008800; font-weight: bold">font-size</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">30px</span>;
+  <span style="color: #008800; font-weight: bold">font-weight</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">bold</span>;
+  <span style="color: #008800; font-weight: bold">text-align</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">center</span>;
+  flex<span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">0</span> <span style="color: #6600EE; font-weight: bold">1</span> <span style="color: #008800; font-weight: bold">auto</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.graph</span> {
+  flex<span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">0</span> <span style="color: #6600EE; font-weight: bold">1</span> <span style="color: #008800; font-weight: bold">auto</span>;
+  <span style="color: #008800; font-weight: bold">margin-top</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">20px</span>;
+  <span style="color: #008800; font-weight: bold">margin-bottom</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">20px</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.selections</span> {
+  <span style="color: #008800; font-weight: bold">padding-top</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">20px</span>;
+  <span style="color: #008800; font-weight: bold">padding-left</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">20px</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.option</span> {
+  <span style="color: #008800; font-weight: bold">padding-top</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">10px</span>;
+  <span style="color: #008800; font-weight: bold">display</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">block</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.option-label</span> {
+  <span style="color: #008800; font-weight: bold">display</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">inline</span><span style="color: #333333">-</span><span style="color: #008800; font-weight: bold">block</span>;
+  <span style="color: #008800; font-weight: bold">width</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">75px</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.option-entry</span> {
+  <span style="color: #008800; font-weight: bold">display</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">inline</span><span style="color: #333333">-</span><span style="color: #008800; font-weight: bold">block</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.dropdown</span> {
+  <span style="color: #008800; font-weight: bold">border</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">1px</span> <span style="color: #008800; font-weight: bold">solid</span> <span style="color: #6600EE; font-weight: bold">#111</span>;
+  <span style="color: #008800; font-weight: bold">background</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">transparent</span>;
+  <span style="color: #008800; font-weight: bold">width</span><span style="color: #333333">:</span> calc(<span style="color: #6600EE; font-weight: bold">100</span><span style="color: #333333">%</span> <span style="color: #333333">-</span> <span style="color: #6600EE; font-weight: bold">100px</span>);
+  <span style="color: #008800; font-weight: bold">padding</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">5px</span>;
+  <span style="color: #008800; font-weight: bold">font-size</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">16px</span>;
+  <span style="color: #008800; font-weight: bold">border</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">1px</span> <span style="color: #008800; font-weight: bold">solid</span> <span style="color: #6600EE; font-weight: bold">#ccc</span>;
+  <span style="color: #008800; font-weight: bold">height</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">30px</span>;
+  <span style="color: #008800; font-weight: bold">text-align</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">center</span>;
+  <span style="color: #008800; font-weight: bold">vertical-align</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">middle</span>;
+  <span style="color: #333333">-</span>webkit<span style="color: #333333">-</span>appearance<span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">none</span>;
+  <span style="color: #333333">-</span>moz<span style="color: #333333">-</span>appearance<span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">none</span>;
+  appearance<span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">none</span>;
+  <span style="color: #008800; font-weight: bold">display</span><span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">inline</span><span style="color: #333333">-</span><span style="color: #008800; font-weight: bold">block</span>;
+}
+
+<span style="color: #BB0066; font-weight: bold">.horizontal-line</span> {
+  <span style="color: #008800; font-weight: bold">padding</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">10px</span> <span style="color: #6600EE; font-weight: bold">0</span> <span style="color: #6600EE; font-weight: bold">10px</span> <span style="color: #6600EE; font-weight: bold">0</span>;
+  <span style="color: #008800; font-weight: bold">width</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">100</span><span style="color: #333333">%</span>;
+  <span style="color: #008800; font-weight: bold">border-bottom</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">1px</span> <span style="color: #008800; font-weight: bold">dashed</span> <span style="color: #6600EE; font-weight: bold">#9E9E9E</span>;
+}
+
+<span style="color: #0066BB; font-weight: bold">#results</span> {
+  <span style="color: #008800; font-weight: bold">padding</span><span style="color: #333333">:</span> <span style="color: #6600EE; font-weight: bold">20px</span> <span style="color: #6600EE; font-weight: bold">20px</span> <span style="color: #6600EE; font-weight: bold">0</span> <span style="color: #6600EE; font-weight: bold">20px</span>;
+  <span style="color: #008800; font-weight: bold">white-space</span><span style="color: #333333">:</span> pre<span style="color: #333333">-</span>wrap;
+}
+</pre></td></tr></table></div>

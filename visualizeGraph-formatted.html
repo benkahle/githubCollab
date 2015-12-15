@@ -1,0 +1,832 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">var</span> width <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1400</span>,
+    height <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">900</span>;
+
+<span style="color: #008800; font-weight: bold">var</span> color <span style="color: #333333">=</span> d3.scale.category20();
+
+<span style="color: #888888">// Settings to configure d3 force-layout</span>
+<span style="color: #008800; font-weight: bold">var</span> force <span style="color: #333333">=</span> d3.layout.force()
+  .linkDistance(<span style="color: #0000DD; font-weight: bold">20</span>)
+  .charge(<span style="color: #333333">-</span><span style="color: #0000DD; font-weight: bold">120</span>)
+  .gravity(<span style="color: #6600EE; font-weight: bold">0.5</span>)
+  .size([width, height]);
+
+<span style="color: #008800; font-weight: bold">var</span> svg <span style="color: #333333">=</span> d3.select(<span style="background-color: #fff0f0">&quot;body&quot;</span>).append(<span style="background-color: #fff0f0">&quot;svg&quot;</span>)
+  .attr(<span style="background-color: #fff0f0">&quot;width&quot;</span>, width)
+  .attr(<span style="background-color: #fff0f0">&quot;height&quot;</span>, height)
+  .attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;graph&quot;</span>);
+
+<span style="color: #888888">// Get collaborator JSON data from our Github repository</span>
+d3.json(<span style="background-color: #fff0f0">&quot;https://raw.githubusercontent.com/benkahle/githubCollab/master/bdCollabsByPerson.json&quot;</span>,
+  <span style="color: #008800; font-weight: bold">function</span>(error1, fullData) {
+  <span style="color: #008800; font-weight: bold">if</span> (error1) {
+    <span style="color: #008800; font-weight: bold">throw</span> error1;
+  }
+  <span style="color: #888888">// Get collaborator JSON data in format for d3 from out Github repository</span>
+  d3.json(<span style="background-color: #fff0f0">&quot;https://raw.githubusercontent.com/benkahle/githubCollab/master/graph.json&quot;</span>,
+  <span style="color: #008800; font-weight: bold">function</span>(error2, graph) {
+    <span style="color: #008800; font-weight: bold">if</span> (error2) {
+      <span style="color: #008800; font-weight: bold">throw</span> error2;
+    }
+
+    <span style="color: #008800; font-weight: bold">var</span> nodes <span style="color: #333333">=</span> graph.nodes.slice(),
+      links <span style="color: #333333">=</span> graph.links.slice(),
+      bilinks <span style="color: #333333">=</span> [];
+
+    <span style="color: #008800; font-weight: bold">var</span> sourceList <span style="color: #333333">=</span> <span style="color: #007020">document</span>.getElementById(<span style="background-color: #fff0f0">&quot;source&quot;</span>);
+    <span style="color: #008800; font-weight: bold">var</span> targetList <span style="color: #333333">=</span> <span style="color: #007020">document</span>.getElementById(<span style="background-color: #fff0f0">&quot;target&quot;</span>);
+
+    <span style="color: #008800; font-weight: bold">var</span> nodesByName <span style="color: #333333">=</span> {};
+
+    <span style="color: #888888">// Get a list of all names in the graph</span>
+    <span style="color: #008800; font-weight: bold">var</span> names <span style="color: #333333">=</span> [];
+    nodes.forEach(<span style="color: #008800; font-weight: bold">function</span>(node, i) {
+      names.push(node.name);
+    });
+
+    <span style="color: #888888">// Sort the names alphabeticly and add them to the drop down menus</span>
+    names.sort();
+    names.forEach(<span style="color: #008800; font-weight: bold">function</span>(name) {
+      <span style="color: #008800; font-weight: bold">var</span> option <span style="color: #333333">=</span> <span style="color: #007020">document</span>.createElement(<span style="background-color: #fff0f0">&quot;option&quot;</span>);
+      option.value <span style="color: #333333">=</span> name;
+      option.text <span style="color: #333333">=</span> name;
+      sourceList.add(option);
+      <span style="color: #008800; font-weight: bold">var</span> option2 <span style="color: #333333">=</span> option.cloneNode(<span style="color: #008800; font-weight: bold">true</span>);
+      targetList.add(option2);
+    });
+
+    <span style="color: #888888">// Start the d3 force-layout with our graph</span>
+    force
+      .nodes(nodes)
+      .links(links)
+      .start();
+
+    <span style="color: #888888">// Get a reference to links and append path elements</span>
+    <span style="color: #008800; font-weight: bold">var</span> link <span style="color: #333333">=</span> svg.selectAll(<span style="background-color: #fff0f0">&quot;.link&quot;</span>)
+      .data(links)
+      .enter().append(<span style="background-color: #fff0f0">&quot;path&quot;</span>)
+      .attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;link&quot;</span>);
+
+    <span style="color: #888888">// Make a reference to node groups and append g elements</span>
+    <span style="color: #008800; font-weight: bold">var</span> gnodes <span style="color: #333333">=</span> svg.selectAll(<span style="background-color: #fff0f0">&quot;g.gnode&quot;</span>)
+      .data(graph.nodes)
+      .enter().append(<span style="background-color: #fff0f0">&quot;g&quot;</span>).classed(<span style="background-color: #fff0f0">&quot;gnode&quot;</span>, <span style="color: #008800; font-weight: bold">true</span>);
+
+    <span style="color: #888888">// Get a reference to all nodes, store them by name, and configure mouse effects</span>
+    <span style="color: #008800; font-weight: bold">var</span> node <span style="color: #333333">=</span> gnodes.append(<span style="background-color: #fff0f0">&quot;circle&quot;</span>)
+      .attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;node&quot;</span>)
+      .attr(<span style="background-color: #fff0f0">&quot;r&quot;</span>, <span style="color: #0000DD; font-weight: bold">4</span>)
+      .style(<span style="background-color: #fff0f0">&quot;i&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>(d) {
+        nodesByName[d.name] <span style="color: #333333">=</span> d;
+      })
+      .call(force.drag)
+      .on(<span style="background-color: #fff0f0">&quot;mouseover&quot;</span>, fade(<span style="color: #008800; font-weight: bold">true</span>)).on(<span style="background-color: #fff0f0">&quot;mouseout&quot;</span>, resetStyling);
+
+    <span style="color: #888888">// Add text labels to node groups</span>
+    <span style="color: #008800; font-weight: bold">var</span> labels <span style="color: #333333">=</span> gnodes.append(<span style="background-color: #fff0f0">&quot;text&quot;</span>).text(<span style="color: #008800; font-weight: bold">function</span>(d) { <span style="color: #008800; font-weight: bold">return</span> d.name; });
+    <span style="color: #888888">// Add text labels on hover</span>
+    node.append(<span style="background-color: #fff0f0">&quot;title&quot;</span>).text(<span style="color: #008800; font-weight: bold">function</span>(d) { <span style="color: #008800; font-weight: bold">return</span> d.name; });
+
+    <span style="color: #888888">// Style the nodes and links to highlight highly connected nodes more prominantly</span>
+    resetStyling();
+
+    <span style="color: #888888">// Build reference from node indices to links</span>
+    <span style="color: #008800; font-weight: bold">var</span> linkedByIndex <span style="color: #333333">=</span> {};
+    graph.links.forEach(<span style="color: #008800; font-weight: bold">function</span>(d) {
+      linkedByIndex[d.source.index <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot;,&quot;</span> <span style="color: #333333">+</span> d.target.index] <span style="color: #333333">=</span> d;
+    });
+
+    <span style="color: #888888">// Utility function to get link if nodes are connected</span>
+    <span style="color: #008800; font-weight: bold">function</span> isConnected(a, b) {
+      <span style="color: #008800; font-weight: bold">if</span> (linkedByIndex[a.index <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot;,&quot;</span> <span style="color: #333333">+</span> b.index]) {
+        <span style="color: #008800; font-weight: bold">return</span> linkedByIndex[a.index <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot;,&quot;</span> <span style="color: #333333">+</span> b.index];
+      } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (linkedByIndex[b.index <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot;,&quot;</span> <span style="color: #333333">+</span> a.index]) {
+        <span style="color: #008800; font-weight: bold">return</span> linkedByIndex[b.index <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot;,&quot;</span> <span style="color: #333333">+</span> a.index];
+      } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (a.index <span style="color: #333333">===</span> b.index) {
+        <span style="color: #008800; font-weight: bold">return</span> {value<span style="color: #333333">:</span> <span style="color: #0000DD; font-weight: bold">1</span>};
+      } <span style="color: #008800; font-weight: bold">else</span> {
+        <span style="color: #008800; font-weight: bold">return</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+      }
+    }
+
+    <span style="color: #888888">// Mouse over effect</span>
+    <span style="color: #008800; font-weight: bold">function</span> fade(mouseover) {
+      <span style="color: #008800; font-weight: bold">return</span> <span style="color: #008800; font-weight: bold">function</span>(d) {
+        <span style="color: #008800; font-weight: bold">var</span> opacity <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span>;
+        <span style="color: #008800; font-weight: bold">if</span> (mouseover) {
+          opacity <span style="color: #333333">=</span> <span style="color: #6600EE; font-weight: bold">0.1</span>;
+        }
+        node.style(<span style="background-color: #fff0f0">&quot;stroke-opacity&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>(o) {
+          <span style="color: #008800; font-weight: bold">var</span> connectionWeight <span style="color: #333333">=</span> isConnected(d, o).value;
+          <span style="color: #008800; font-weight: bold">var</span> thisOpacity <span style="color: #333333">=</span> connectionWeight <span style="color: #333333">?</span> <span style="color: #0000DD; font-weight: bold">1</span> <span style="color: #333333">:</span> opacity;
+          <span style="color: #008800; font-weight: bold">this</span>.setAttribute(<span style="background-color: #fff0f0">&#39;fill-opacity&#39;</span>, thisOpacity);
+          <span style="color: #008800; font-weight: bold">if</span> (mouseover) {
+            <span style="color: #008800; font-weight: bold">if</span> (connectionWeight <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">3</span>) {
+              d3.select(<span style="color: #008800; font-weight: bold">this</span>.parentElement).attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;gnode-connected&quot;</span>);
+            } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (connectionWeight <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">0</span>) {
+              d3.select(<span style="color: #008800; font-weight: bold">this</span>.parentElement).attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;gnode-linked&quot;</span>);
+            }
+          } <span style="color: #008800; font-weight: bold">else</span> {
+            d3.select(<span style="color: #008800; font-weight: bold">this</span>.parentElement).attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;gnode&quot;</span>);
+          }
+          <span style="color: #008800; font-weight: bold">return</span> thisOpacity;
+        });
+
+        <span style="color: #008800; font-weight: bold">if</span> (mouseover) {
+          d3.select(<span style="color: #008800; font-weight: bold">this</span>.parentElement).attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;gnode-active&quot;</span>);
+        } <span style="color: #008800; font-weight: bold">else</span> {
+          d3.select(<span style="color: #008800; font-weight: bold">this</span>.parentElement).attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;gnode&quot;</span>);
+        }
+
+        link.style(<span style="background-color: #fff0f0">&quot;opacity&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>(o) {
+          <span style="color: #008800; font-weight: bold">var</span> thisOpacity;
+          <span style="color: #008800; font-weight: bold">if</span> (o.source <span style="color: #333333">===</span> d <span style="color: #333333">||</span> o.target <span style="color: #333333">===</span> d) {
+            <span style="color: #008800; font-weight: bold">if</span> (o.value <span style="color: #333333">&gt;=</span> <span style="color: #0000DD; font-weight: bold">5</span>) {
+              thisOpacity <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span>;
+            } <span style="color: #008800; font-weight: bold">else</span> {
+              thisOpacity <span style="color: #333333">=</span> o.value<span style="color: #333333">/</span><span style="color: #0000DD; font-weight: bold">3</span>;
+            }
+          } <span style="color: #008800; font-weight: bold">else</span> {
+            thisOpacity <span style="color: #333333">=</span> opacity;
+          }
+          <span style="color: #008800; font-weight: bold">return</span> thisOpacity;
+        });
+      };
+    }
+
+    <span style="color: #888888">// Update the graph position when d3 force-layout calculates a new timestep</span>
+    force.on(<span style="background-color: #fff0f0">&quot;tick&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>() {
+      link.attr(<span style="background-color: #fff0f0">&quot;d&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>(d) {
+        <span style="color: #008800; font-weight: bold">return</span> <span style="background-color: #fff0f0">&quot;M&quot;</span><span style="color: #333333">+</span>d.source.x<span style="color: #333333">+</span><span style="background-color: #fff0f0">&quot;,&quot;</span><span style="color: #333333">+</span>d.source.y <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot; &quot;</span><span style="color: #333333">+</span>d.target.x<span style="color: #333333">+</span><span style="background-color: #fff0f0">&quot;,&quot;</span><span style="color: #333333">+</span>d.target.y;
+      });
+      gnodes.attr(<span style="background-color: #fff0f0">&quot;transform&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>(d) {
+        <span style="color: #008800; font-weight: bold">if</span> (d.x <span style="color: #333333">&gt;</span> width) {
+          d.x <span style="color: #333333">=</span> width;
+        }
+        <span style="color: #008800; font-weight: bold">if</span> (d.x <span style="color: #333333">&lt;</span> <span style="color: #0000DD; font-weight: bold">0</span>) {
+          d.x <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+        }
+        <span style="color: #008800; font-weight: bold">if</span> (d.y <span style="color: #333333">&gt;</span> height) {
+          d.y <span style="color: #333333">=</span> height;
+        }
+        <span style="color: #008800; font-weight: bold">if</span> (d.y <span style="color: #333333">&lt;</span> <span style="color: #0000DD; font-weight: bold">0</span>) {
+          d.y <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+        }
+        <span style="color: #008800; font-weight: bold">return</span> <span style="background-color: #fff0f0">&quot;translate(&quot;</span> <span style="color: #333333">+</span> d.x <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot;,&quot;</span> <span style="color: #333333">+</span> d.y <span style="color: #333333">+</span> <span style="background-color: #fff0f0">&quot;)&quot;</span>;
+      });
+    });
+
+    <span style="color: #888888">// Click handler for &quot;Find Path&quot; button</span>
+    <span style="color: #007020">document</span>.getElementById(<span style="background-color: #fff0f0">&quot;run&quot;</span>).onclick <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">function</span>() {
+      <span style="color: #008800; font-weight: bold">var</span> type <span style="color: #333333">=</span> <span style="color: #007020">document</span>.querySelector(<span style="background-color: #fff0f0">&#39;input[name=&quot;search-type&quot;]:checked&#39;</span>).value;
+      <span style="color: #008800; font-weight: bold">var</span> results <span style="color: #333333">=</span> <span style="color: #007020">document</span>.getElementById(<span style="background-color: #fff0f0">&quot;results&quot;</span>);
+      results.textContent <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;Searching....&quot;</span>;
+      <span style="color: #008800; font-weight: bold">var</span> resultsList <span style="color: #333333">=</span> [];
+      <span style="color: #008800; font-weight: bold">var</span> source <span style="color: #333333">=</span> sourceList.value;
+      <span style="color: #008800; font-weight: bold">var</span> target <span style="color: #333333">=</span> targetList.value;
+      <span style="color: #888888">// Run shortest path or longest path algorithm</span>
+      <span style="color: #008800; font-weight: bold">if</span> (type <span style="color: #333333">===</span> <span style="background-color: #fff0f0">&quot;shortest&quot;</span>) {
+        resultsList <span style="color: #333333">=</span> dijk(source, target);
+      } <span style="color: #008800; font-weight: bold">else</span> {
+        resultsList <span style="color: #333333">=</span> bellmanFord(source, target, JSON.parse(JSON.stringify(fullData)));
+      }
+      resetStyling();
+      <span style="color: #008800; font-weight: bold">var</span> stringResults;
+      <span style="color: #888888">// If a path is found, show links on side bar and highlight nodes and links in graph</span>
+      <span style="color: #008800; font-weight: bold">if</span> (resultsList.length <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">0</span>) {
+        stringResults <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;Path: (Length: &quot;</span><span style="color: #333333">+</span>resultsList.length<span style="color: #333333">+</span><span style="background-color: #fff0f0">&quot;)\n\n&quot;</span><span style="color: #333333">+</span>resultsList.join(<span style="background-color: #fff0f0">&quot;\n&quot;</span>);
+        focusPath(resultsList);
+      } <span style="color: #008800; font-weight: bold">else</span> {
+        stringResults <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&quot;No path found&quot;</span>;
+      }
+      results.textContent <span style="color: #333333">=</span> stringResults;
+    };
+
+    <span style="color: #888888">// Reset styling on &quot;Clear&quot; button click</span>
+    <span style="color: #007020">document</span>.getElementById(<span style="background-color: #fff0f0">&quot;clear&quot;</span>).onclick <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">function</span>() {
+      resetStyling();
+    };
+
+    <span style="color: #888888">// Function to style graph highlighting highly connected nodes</span>
+    <span style="color: #008800; font-weight: bold">function</span> resetStyling() {
+      node.style(<span style="background-color: #fff0f0">&quot;stroke-opacity&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>(o) {
+        d3.select(<span style="color: #008800; font-weight: bold">this</span>.parentElement).attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;gnode&quot;</span>);
+        <span style="color: #008800; font-weight: bold">return</span> <span style="color: #0000DD; font-weight: bold">1</span>;
+      }).style(<span style="background-color: #fff0f0">&quot;fill-opacity&quot;</span>, <span style="color: #0000DD; font-weight: bold">1</span>);
+      link.style(<span style="background-color: #fff0f0">&quot;stroke&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>(d) {
+        d3.select(<span style="color: #008800; font-weight: bold">this</span>).attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;link&quot;</span>);
+        <span style="color: #008800; font-weight: bold">var</span> colors <span style="color: #333333">=</span> [
+          <span style="background-color: #fff0f0">&quot;#0002ff&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#0064ff&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#00a4ff&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#00ffd0&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#00ff36&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#65ff00&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#b0ff00&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#fdff00&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FFf000&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FFb400&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FFa000&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF8c00&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF7800&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF6400&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF5000&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF3c00&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF2800&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF2800&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF1400&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF0000&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF0000&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF0050&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF0050&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF0050&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF0050&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF0050&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF0050&quot;</span>,
+          <span style="background-color: #fff0f0">&quot;#FF0050&quot;</span>,
+        ];
+        <span style="color: #008800; font-weight: bold">return</span> colors[d.value];
+      })
+      .style(<span style="background-color: #fff0f0">&quot;opacity&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>(d) {
+        <span style="color: #008800; font-weight: bold">if</span> (d.value <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">4</span>) {
+          <span style="color: #008800; font-weight: bold">return</span> <span style="color: #0000DD; font-weight: bold">1</span>;
+        } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (d.value <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">2</span>) {
+          <span style="color: #008800; font-weight: bold">return</span> d.value<span style="color: #333333">/</span><span style="color: #0000DD; font-weight: bold">5</span>; <span style="color: #888888">//3/5 (.6) or 4/5 (.8)</span>
+        } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (d.value <span style="color: #333333">===</span> <span style="color: #0000DD; font-weight: bold">2</span>){
+          <span style="color: #008800; font-weight: bold">return</span> d.value<span style="color: #333333">/</span><span style="color: #0000DD; font-weight: bold">6</span>; <span style="color: #888888">//2/6 (.3)</span>
+        } <span style="color: #008800; font-weight: bold">else</span> {
+          <span style="color: #008800; font-weight: bold">return</span> <span style="color: #6600EE; font-weight: bold">0.2</span>; <span style="color: #888888">//(.2)</span>
+        }
+      })
+      .style(<span style="background-color: #fff0f0">&quot;stroke-width&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>(d) {
+        <span style="color: #008800; font-weight: bold">var</span> base <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">3</span>;
+        <span style="color: #008800; font-weight: bold">if</span> (d.value <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">4</span>) {
+          <span style="color: #008800; font-weight: bold">return</span> <span style="color: #0000DD; font-weight: bold">1</span><span style="color: #333333">*</span>base<span style="color: #333333">+</span><span style="background-color: #fff0f0">&quot;px&quot;</span>;
+        } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (d.value <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">2</span>) {
+          <span style="color: #008800; font-weight: bold">return</span> (d.value<span style="color: #333333">/</span><span style="color: #0000DD; font-weight: bold">5</span>)<span style="color: #333333">*</span>base<span style="color: #333333">+</span><span style="background-color: #fff0f0">&quot;px&quot;</span>; <span style="color: #888888">//3/5 (.6) or 4/5 (.8)</span>
+        } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (d.value <span style="color: #333333">===</span> <span style="color: #0000DD; font-weight: bold">2</span>){
+          <span style="color: #008800; font-weight: bold">return</span> (d.value<span style="color: #333333">/</span><span style="color: #0000DD; font-weight: bold">6</span>)<span style="color: #333333">*</span>base<span style="color: #333333">+</span><span style="background-color: #fff0f0">&quot;px&quot;</span>; <span style="color: #888888">//2/6 (.3)</span>
+        } <span style="color: #008800; font-weight: bold">else</span> {
+          <span style="color: #008800; font-weight: bold">return</span> <span style="color: #6600EE; font-weight: bold">0.2</span><span style="color: #333333">*</span>base<span style="color: #333333">+</span><span style="background-color: #fff0f0">&quot;px&quot;</span>; <span style="color: #888888">//(.2)</span>
+        }
+      });
+    }
+
+    <span style="color: #888888">// Function to highlight a path of nodes and links</span>
+    <span style="color: #008800; font-weight: bold">function</span> focusPath(pathList) {
+      node.style(<span style="background-color: #fff0f0">&quot;stroke&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>(o) {
+        <span style="color: #008800; font-weight: bold">if</span> (pathList.indexOf(o.name) <span style="color: #333333">!==</span> <span style="color: #333333">-</span><span style="color: #0000DD; font-weight: bold">1</span>) {
+          d3.select(<span style="color: #008800; font-weight: bold">this</span>.parentElement).attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;gnode-connected&quot;</span>);
+        }
+      });
+      link.style(<span style="background-color: #fff0f0">&quot;stroke&quot;</span>, <span style="color: #008800; font-weight: bold">function</span>(l) {
+        <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #008800; font-weight: bold">var</span> i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; i <span style="color: #333333">&lt;</span> pathList.length<span style="color: #333333">-</span><span style="color: #0000DD; font-weight: bold">1</span>; i<span style="color: #333333">++</span>) {
+          <span style="color: #008800; font-weight: bold">var</span> link <span style="color: #333333">=</span> isConnected(nodesByName[pathList[i]], nodesByName[pathList[i<span style="color: #333333">+</span><span style="color: #0000DD; font-weight: bold">1</span>]]);
+          <span style="color: #008800; font-weight: bold">if</span> (l <span style="color: #333333">===</span> link) {
+            d3.select(<span style="color: #008800; font-weight: bold">this</span>).attr(<span style="background-color: #fff0f0">&quot;class&quot;</span>, <span style="background-color: #fff0f0">&quot;connected-link&quot;</span>)
+              .style(<span style="background-color: #fff0f0">&quot;opacity&quot;</span>, <span style="color: #0000DD; font-weight: bold">1</span>)
+              .style(<span style="background-color: #fff0f0">&quot;stroke-opacity&quot;</span>, <span style="color: #0000DD; font-weight: bold">1</span>)
+              .style(<span style="background-color: #fff0f0">&quot;stroke-width&quot;</span>, <span style="background-color: #fff0f0">&quot;2px&quot;</span>);
+          }
+        }
+      });
+    }
+
+    <span style="color: #888888">// Bellman-Ford Algorithm modified for longest path with dynamic cycling pruning</span>
+    <span style="color: #008800; font-weight: bold">function</span> bellmanFord(source, target, vertices) {
+    	<span style="color: #008800; font-weight: bold">var</span> cycles <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">false</span>;
+    	<span style="color: #008800; font-weight: bold">var</span> dists <span style="color: #333333">=</span> {};
+    	<span style="color: #008800; font-weight: bold">var</span> prev <span style="color: #333333">=</span> {};
+    	<span style="color: #008800; font-weight: bold">var</span> path <span style="color: #333333">=</span> [];
+    	<span style="color: #888888">//Set inital distances to 1 assuming they are next to each other and set neighbor on shortest path from the source to undefined for all vertices</span>
+    	<span style="color: #007020">Object</span>.keys(vertices).forEach((key) <span style="color: #333333">=&gt;</span> {
+    		dists[key] <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">Infinity</span>;
+    		prev[key] <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">undefined</span>;
+    	});
+
+    	<span style="color: #888888">//set distance from source to source to be 0</span>
+    	dists[source] <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+    	<span style="color: #888888">//start algorithm at the source</span>
+    	<span style="color: #888888">//while vertices are still graph</span>
+
+    	<span style="color: #008800; font-weight: bold">for</span>(<span style="color: #008800; font-weight: bold">var</span> i<span style="color: #333333">=</span><span style="color: #0000DD; font-weight: bold">0</span>; i<span style="color: #333333">&lt;</span><span style="color: #007020">Object</span>.keys(vertices).length<span style="color: #333333">-</span><span style="color: #0000DD; font-weight: bold">1</span>; i<span style="color: #333333">++</span>){
+    		<span style="color: #007020">Object</span>.keys(vertices).forEach((currentVertex)<span style="color: #333333">=&gt;</span>{
+    			<span style="color: #888888">//store edges before deleting object</span>
+    			<span style="color: #008800; font-weight: bold">var</span> currentEdges <span style="color: #333333">=</span> vertices[currentVertex];
+    			<span style="color: #888888">//find new shortest paths to all neighboring vertices if available</span>
+    			<span style="color: #007020">Object</span>.keys(currentEdges).forEach((neighbor) <span style="color: #333333">=&gt;</span> {
+    				<span style="color: #008800; font-weight: bold">var</span> testDist <span style="color: #333333">=</span> (<span style="color: #333333">-</span><span style="color: #6600EE; font-weight: bold">1.0</span><span style="color: #333333">/</span>currentEdges[neighbor])<span style="color: #333333">+</span>dists[currentVertex];
+    				<span style="color: #008800; font-weight: bold">if</span>(testDist <span style="color: #333333">&lt;</span> dists[neighbor]){
+    					prev[neighbor] <span style="color: #333333">=</span> currentVertex;
+    					dists[neighbor] <span style="color: #333333">=</span> testDist;
+    				}
+    			});
+    		})
+    	}
+    	<span style="color: #888888">//prepend the target to the list</span>
+    	currentVertex <span style="color: #333333">=</span> target;
+    	path.unshift(currentVertex);
+    	<span style="color: #888888">// console.log(prev);</span>
+    	<span style="color: #008800; font-weight: bold">while</span>(prev[currentVertex] <span style="color: #333333">!=</span> source){
+    		<span style="color: #888888">// console.log(&quot;VERTEX:&quot;,currentVertex);</span>
+    		<span style="color: #888888">// console.log(&quot;PREV:&quot;,prev[currentVertex]);</span>
+    		<span style="color: #888888">//preprend prev to list and set new current to be the previous</span>
+    		<span style="color: #008800; font-weight: bold">if</span>(path.indexOf(prev[currentVertex])<span style="color: #333333">==-</span><span style="color: #0000DD; font-weight: bold">1</span>){
+    			path.unshift(prev[currentVertex])
+    			currentVertex <span style="color: #333333">=</span> prev[currentVertex]
+    		} <span style="color: #008800; font-weight: bold">else</span>{
+    			<span style="color: #888888">// console.log(&quot;CYCLE IS:&quot;,currentVertex, &quot;to&quot;, prev[currentVertex]);</span>
+    			<span style="color: #888888">// console.log(vertices[prev[currentVertex]][currentVertex]);</span>
+    			<span style="color: #008800; font-weight: bold">delete</span> vertices[prev[currentVertex]][currentVertex] <span style="color: #888888">//= -10;</span>
+    			<span style="color: #888888">// console.log(vertices[currentVertex][prev[currentVertex]]);</span>
+    			cycles <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">true</span>;
+    			<span style="color: #008800; font-weight: bold">break</span>
+    		}
+    	}
+    	<span style="color: #008800; font-weight: bold">if</span>(<span style="color: #333333">!</span>cycles){
+    		path.unshift(source)
+    		<span style="color: #008800; font-weight: bold">return</span> path;
+    	} <span style="color: #008800; font-weight: bold">else</span> {
+    		console.log(<span style="background-color: #fff0f0">&quot;Found a cycle with path length&quot;</span>, path.length);
+    		<span style="color: #008800; font-weight: bold">return</span> bellmanFord(source, target, vertices)
+    	}
+    }
+
+    <span style="color: #888888">// Dijkstra&#39;s Algorithm for shortest path finding</span>
+    <span style="color: #008800; font-weight: bold">function</span> dijk(source, target){
+    	<span style="color: #008800; font-weight: bold">var</span> dists <span style="color: #333333">=</span> {};
+    	<span style="color: #008800; font-weight: bold">var</span> prev <span style="color: #333333">=</span> {};
+    	<span style="color: #008800; font-weight: bold">var</span> path <span style="color: #333333">=</span> [];
+      <span style="color: #008800; font-weight: bold">var</span> vertices <span style="color: #333333">=</span> JSON.parse(JSON.stringify(fullData));
+    	<span style="color: #888888">//Set inital distances to infinity (and beyond) and set neighbor on shortest path from the source to undefined for all vertices</span>
+    	<span style="color: #007020">Object</span>.keys(vertices).forEach((key) <span style="color: #333333">=&gt;</span> {
+    		dists[key] <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">Infinity</span>;
+    		prev[key] <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">undefined</span>;
+    	});
+
+    	<span style="color: #888888">//set distance from source to source to be 0</span>
+    	dists[source] <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+    	<span style="color: #888888">//start algorithm at the source</span>
+    	<span style="color: #008800; font-weight: bold">var</span> currentVertex <span style="color: #333333">=</span> source;
+    	<span style="color: #888888">//while vertices are still graph</span>
+    	<span style="color: #008800; font-weight: bold">while</span> (<span style="color: #007020">Object</span>.keys(vertices).length <span style="color: #333333">&gt;</span><span style="color: #0000DD; font-weight: bold">0</span>){
+    		<span style="color: #888888">//preset minDistance not visted yet to infinity</span>
+    		<span style="color: #008800; font-weight: bold">var</span> minDist <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">Infinity</span>;
+    		<span style="color: #888888">//find unvisited node with minimum distance from source</span>
+    		<span style="color: #007020">Object</span>.keys(vertices).forEach((vertex) <span style="color: #333333">=&gt;</span>{
+    			<span style="color: #008800; font-weight: bold">var</span> vertDist <span style="color: #333333">=</span> dists[vertex];
+    			<span style="color: #008800; font-weight: bold">if</span>(dists[vertex] <span style="color: #333333">&lt;</span> minDist) {
+    				minDist <span style="color: #333333">=</span> dists[vertex];
+    				currentVertex <span style="color: #333333">=</span> vertex;
+    			}
+    		});
+
+    		<span style="color: #888888">//store edges before deleting object</span>
+    		<span style="color: #008800; font-weight: bold">var</span> currentEdges <span style="color: #333333">=</span> vertices[currentVertex];
+    		<span style="color: #888888">//delete the current vertex from graph because we have now visited it</span>
+    		<span style="color: #008800; font-weight: bold">delete</span> vertices[currentVertex];
+
+        <span style="color: #888888">// If no more edges, no path is possible</span>
+        <span style="color: #008800; font-weight: bold">if</span> (<span style="color: #333333">!</span>currentEdges) {
+          <span style="color: #008800; font-weight: bold">return</span> [];
+        } <span style="color: #008800; font-weight: bold">else</span> {
+          <span style="color: #888888">//find new shortest paths to all neighboring vertices if available</span>
+          <span style="color: #007020">Object</span>.keys(currentEdges).forEach((neighbor) <span style="color: #333333">=&gt;</span> {
+            <span style="color: #008800; font-weight: bold">var</span> testDist <span style="color: #333333">=</span> currentEdges[neighbor]<span style="color: #333333">+</span>dists[currentVertex];
+            <span style="color: #008800; font-weight: bold">if</span>(testDist <span style="color: #333333">&lt;</span> dists[neighbor]){
+              prev[neighbor] <span style="color: #333333">=</span> currentVertex;
+              dists[neighbor] <span style="color: #333333">=</span> testDist;
+            }
+          });
+
+          <span style="color: #888888">//if our current vertex is the target, go down the prev tree to find the whole path</span>
+          <span style="color: #008800; font-weight: bold">if</span>(currentVertex <span style="color: #333333">===</span> target){
+            <span style="color: #888888">//prepend the target to the list</span>
+            path.unshift(currentVertex);
+            <span style="color: #008800; font-weight: bold">while</span>(prev[currentVertex] <span style="color: #333333">!=</span> <span style="color: #008800; font-weight: bold">undefined</span>){
+              <span style="color: #888888">//preprend prev to list and set new current to be the previous</span>
+              path.unshift(prev[currentVertex])
+              currentVertex <span style="color: #333333">=</span> prev[currentVertex]
+            }
+            <span style="color: #008800; font-weight: bold">return</span> path;
+          }
+        }
+    	}
+    }
+  });
+});
+</pre></td></tr></table></div>

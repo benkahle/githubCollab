@@ -1,5 +1,6 @@
 .node {
   stroke: #fff;
+  fill: rgb(31, 119, 180);
   stroke-width: 1.5px;
 }
 
@@ -34,7 +35,13 @@ text {
 }
 
 .gnode-connected .node {
-  stroke: green;
+  stroke: orange;
+  fill: yellow;
+  stroke-width: 2.5px
+}
+
+.gnode-linked .node {
+  stroke: orange;
   stroke-width: 2.5px
 }
 
@@ -65,6 +72,8 @@ body {
 
 .graph {
   flex: 0 1 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .selections {

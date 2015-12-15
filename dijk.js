@@ -80,4 +80,4 @@ dijk = function (source, target, graph){
 }
 
 module.exports = dijk;
-// console.log(dijk(source,target));
+console.log(dijk(source,target));

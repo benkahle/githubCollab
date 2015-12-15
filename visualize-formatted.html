@@ -1,0 +1,82 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .2em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #557799">&lt;!DOCTYPE html&gt;</span>
+<span style="color: #007700">&lt;html&gt;</span>
+  <span style="color: #007700">&lt;head&gt;</span>
+    <span style="color: #007700">&lt;meta</span> <span style="color: #0000CC">charset=</span><span style="background-color: #fff0f0">&quot;utf-8&quot;</span><span style="color: #007700">&gt;</span>
+    <span style="color: #007700">&lt;link</span> <span style="color: #0000CC">rel=</span><span style="background-color: #fff0f0">&quot;stylesheet&quot;</span> <span style="color: #0000CC">type=</span><span style="background-color: #fff0f0">&quot;text/css&quot;</span> <span style="color: #0000CC">href=</span><span style="background-color: #fff0f0">&quot;./style.css&quot;</span><span style="color: #007700">&gt;</span>
+    <span style="color: #007700">&lt;script </span><span style="color: #0000CC">src=</span><span style="background-color: #fff0f0">&quot;https://d3js.org/d3.v3.min.js&quot;</span><span style="color: #007700">&gt;&lt;/script&gt;</span>
+  <span style="color: #007700">&lt;/head&gt;</span>
+  <span style="color: #007700">&lt;body&gt;</span>
+    <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;menu&quot;</span><span style="color: #007700">&gt;</span>
+      <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;label&quot;</span><span style="color: #007700">&gt;</span>
+        GraphHub
+      <span style="color: #007700">&lt;/div&gt;</span>
+      <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;selections&quot;</span><span style="color: #007700">&gt;</span>
+        <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;option&quot;</span><span style="color: #007700">&gt;</span>
+          <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;option-label&quot;</span><span style="color: #007700">&gt;</span>Source:<span style="color: #007700">&lt;/div&gt;</span>
+          <span style="color: #007700">&lt;select</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;option-entry dropdown&quot;</span> <span style="color: #0000CC">id=</span><span style="background-color: #fff0f0">&quot;source&quot;</span><span style="color: #007700">&gt;&lt;/select&gt;</span>
+        <span style="color: #007700">&lt;/div&gt;</span>
+        <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;option&quot;</span><span style="color: #007700">&gt;</span>
+          <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;option-label&quot;</span><span style="color: #007700">&gt;</span>Target:<span style="color: #007700">&lt;/div&gt;</span>
+          <span style="color: #007700">&lt;select</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;option-entry dropdown&quot;</span> <span style="color: #0000CC">id=</span><span style="background-color: #fff0f0">&quot;target&quot;</span><span style="color: #007700">&gt;&lt;/select&gt;</span>
+        <span style="color: #007700">&lt;/div&gt;</span>
+        <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;option&quot;</span><span style="color: #007700">&gt;</span>
+          <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;option-label&quot;</span><span style="color: #007700">&gt;</span>Search Type:<span style="color: #007700">&lt;/div&gt;</span>
+          <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;option-entry&quot;</span><span style="color: #007700">&gt;</span>
+            <span style="color: #007700">&lt;input</span> <span style="color: #0000CC">type=</span><span style="background-color: #fff0f0">&quot;radio&quot;</span> <span style="color: #0000CC">name=</span><span style="background-color: #fff0f0">&quot;search-type&quot;</span> <span style="color: #0000CC">id=</span><span style="background-color: #fff0f0">&quot;shortest&quot;</span> <span style="color: #0000CC">value=</span><span style="background-color: #fff0f0">&quot;shortest&quot;</span> <span style="color: #0000CC">checked</span><span style="color: #007700">&gt;</span>Shortest<span style="color: #007700">&lt;/input&gt;</span>
+            <span style="color: #007700">&lt;input</span> <span style="color: #0000CC">type=</span><span style="background-color: #fff0f0">&quot;radio&quot;</span> <span style="color: #0000CC">name=</span><span style="background-color: #fff0f0">&quot;search-type&quot;</span> <span style="color: #0000CC">id=</span><span style="background-color: #fff0f0">&quot;shortest&quot;</span> <span style="color: #0000CC">value=</span><span style="background-color: #fff0f0">&quot;longest&quot;</span><span style="color: #007700">&gt;</span>Longest<span style="color: #007700">&lt;/input&gt;</span>
+          <span style="color: #007700">&lt;/div&gt;</span>
+        <span style="color: #007700">&lt;/div&gt;</span>
+        <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;option&quot;</span><span style="color: #007700">&gt;</span>
+          <span style="color: #007700">&lt;button</span> <span style="color: #0000CC">id=</span><span style="background-color: #fff0f0">&quot;run&quot;</span><span style="color: #007700">&gt;</span>Find Path<span style="color: #007700">&lt;/button&gt;</span>
+          <span style="color: #007700">&lt;button</span> <span style="color: #0000CC">id=</span><span style="background-color: #fff0f0">&quot;clear&quot;</span><span style="color: #007700">&gt;</span>Clear<span style="color: #007700">&lt;/button&gt;</span>
+        <span style="color: #007700">&lt;/div&gt;</span>
+      <span style="color: #007700">&lt;/div&gt;</span>
+      <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">class=</span><span style="background-color: #fff0f0">&quot;horizontal-line&quot;</span><span style="color: #007700">&gt;&lt;/div&gt;</span>
+      <span style="color: #007700">&lt;div</span> <span style="color: #0000CC">id=</span><span style="background-color: #fff0f0">&quot;results&quot;</span><span style="color: #007700">&gt;</span>
+        No path found
+      <span style="color: #007700">&lt;/div&gt;</span>
+    <span style="color: #007700">&lt;/div&gt;</span>
+  <span style="color: #007700">&lt;/body&gt;</span>
+  <span style="color: #007700">&lt;script </span><span style="color: #0000CC">src=</span><span style="background-color: #fff0f0">&quot;./visualizeGraph.js&quot;</span><span style="color: #007700">&gt;&lt;/script&gt;</span>
+<span style="color: #007700">&lt;/html&gt;</span>
+</pre></td></tr></table></div>

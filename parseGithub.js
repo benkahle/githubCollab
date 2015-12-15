@@ -22,21 +22,24 @@ var reposByOwner = {};
 //Repos -> Collaborators(users)
 var collabsByPerson= {};
 
+// Get repositories by a github username
 var getUserRepos = (userName, callback) => {
   var options = {
     url: `${apiRoot}/users/${userName}/repos${oAuthAppend}`,
     headers: standardHeaders
   };
- 
+  
   request.get(options, (err, res, body) => {
     if (!err && res.statusCode === 200) {
       var info = JSON.parse(body);
+      // Grab just the list of repository names from the response
       var repoNames = info.map(repo => repo.name);
       callback(null, repoNames);
     }
   });
 };
 
+// Get list of collaborators from a user's repository
 var getCollabsFromUserRepo = (userName, repo, callback) => {
   console.log(userName, repo);
   var options = {
@@ -50,15 +53,17 @@ var getCollabsFromUserRepo = (userName, repo, callback) => {
       callback(err);
     } else if (res.statusCode !== 200) {
       //empty repositories result in 204:
-      //https://api.github.com/repos/lianilychee/hackDiabetes/contributors?access_token=651a7d727bc275b0fad68bf711f1d6816b5861b2
       if (res.statusCode !== 204) {
+        // No idea what went wrong, log to investigate
         console.log(res);
       }
+      // Send error that no data was found
       callback("no data");
     } else {
-      // console.log("success, parsing");
       var info = JSON.parse(body);
+      // Get just the collaborators' usernames
       var collabs = info.map(collab => collab.login);
+      // Remove yourself from list of collaborators
       if (collabs.indexOf(userName) !== -1) {
         collabs.splice(collabs.indexOf(userName), 1);
       }
@@ -68,15 +73,16 @@ var getCollabsFromUserRepo = (userName, repo, callback) => {
 };
 
 //NOTE: Generate Repos by Owners
-// async.forEach(namesList, (name, cb) => {
-//   getUserRepos(name, (err, repos) => {
-//     reposByOwner[name] = repos;
-//     cb();
-//   });
-// }, (err) => {
-//   fs.writeFileSync(storedReposByOwnerFile, JSON.stringify(reposByOwner));
-// });
-reposByOwner = JSON.parse(fs.readFileSync(storedReposByOwnerFile, "utf-8"));
+async.forEach(namesList, (name, cb) => {
+  getUserRepos(name, (err, repos) => {
+    reposByOwner[name] = repos;
+    cb();
+  });
+}, (err) => {
+  fs.writeFileSync(storedReposByOwnerFile, JSON.stringify(reposByOwner));
+});
+// Use cached data instead of querying Github again
+// reposByOwner = JSON.parse(fs.readFileSync(storedReposByOwnerFile, "utf-8"));
 
 //NOTE: Count repositories (number of github requests to make)
 // var count = 0;
@@ -124,34 +130,34 @@ async.forEach(Object.keys(reposByOwner), (repoOwner, outerCallback) => {
   console.log("writing");
   fs.writeFileSync(storedCollabsByPersonFile, JSON.stringify(collabsByPerson));
 });
-// comment above back out
+// Use cached data instead of querying Github again
 // collabsByPerson = JSON.parse(fs.readFileSync(storedCollabsByPersonFile, "utf-8"));
 
-//NOTE: Make collabs bi-directional
-// Object.keys(collabsByPerson).forEach(person => {
-//   Object.keys(collabsByPerson[person]).forEach(collab => {
-//     if (collabsByPerson[collab]) {
-//       if (collabsByPerson[collab][person]){
-//         collabsByPerson[collab][person] += collabsByPerson[person][collab];
-//         collabsByPerson[person][collab] = collabsByPerson[collab][person];
-//       } else {
-//         collabsByPerson[collab][person] = collabsByPerson[person][collab];
-//       }
-//     } else {
-//       collabsByPerson[collab] = {};
-//       collabsByPerson[collab][person] = collabsByPerson[person][collab];
-//     }
-//   });
-// });
-// fs.writeFileSync(storedBDCollabsByPersonFile, JSON.stringify(collabsByPerson));
+//NOTE: Make collaborator data bi-directional
+Object.keys(collabsByPerson).forEach(person => {
+  Object.keys(collabsByPerson[person]).forEach(collab => {
+    if (collabsByPerson[collab]) {
+      if (collabsByPerson[collab][person]){
+        collabsByPerson[collab][person] += collabsByPerson[person][collab];
+        collabsByPerson[person][collab] = collabsByPerson[collab][person];
+      } else {
+        collabsByPerson[collab][person] = collabsByPerson[person][collab];
+      }
+    } else {
+      collabsByPerson[collab] = {};
+      collabsByPerson[collab][person] = collabsByPerson[person][collab];
+    }
+  });
+});
+fs.writeFileSync(storedBDCollabsByPersonFile, JSON.stringify(collabsByPerson));
 
-//NOTE: max
-// var max = 0;
-// Object.keys(collabsByPerson).forEach(person => {
-//   Object.keys(collabsByPerson[person]).forEach(collab => {
-//     if(collabsByPerson[person][collab] > max){
-//       max = collabsByPerson[person][collab];
-//     }
-//   });
-// });
-// console.log(max);
+//NOTE: Find the most collaborations between any two people
+var max = 0;
+Object.keys(collabsByPerson).forEach(person => {
+  Object.keys(collabsByPerson[person]).forEach(collab => {
+    if(collabsByPerson[person][collab] > max){
+      max = collabsByPerson[person][collab];
+    }
+  });
+});
+console.log(max);
