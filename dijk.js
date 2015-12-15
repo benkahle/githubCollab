@@ -54,14 +54,16 @@ dijk = function (source, target, graph){
 				//1.0/currentEdges[neighbor] is the distance to this neighbor node
 				//the reason we use this reciprocal is to give shorter distance
 				//between 2 nodes with lots of collabs with eachother.
-				var testDist = (1.0/currentEdges[neighbor])+dists[currentVertex]; //adding the distance up to this point
+				//adding the distance up to this point
+				var testDist = (1.0/currentEdges[neighbor])+dists[currentVertex]; 
 				if(testDist < dists[neighbor]){
 					prev[neighbor] = currentVertex;
 					dists[neighbor] = testDist;
 				}
 			});
 
-			//if our current vertex is the target, go down the prev tree to find the whole path
+			//if our current vertex is the target, go down 
+			//the prev tree to find the whole path
 			if(currentVertex === target){
 				//prepend the target to the list
 				path.unshift(currentVertex);
