@@ -12,7 +12,8 @@ dijk = function (source, target, graph){
 	}
 	vertices = JSON.parse(JSON.stringify(vertices));
 
-	//Set inital distances to infinity (and beyond) and set neighbor on shortest path from the source to undefined for all vertices
+	//Set inital distances to infinity (and beyond) and set neighbor 
+	//on shortest path from the source to undefined for all vertices
 	Object.keys(vertices).forEach((key) => {
 		dists[key] = Infinity;
 		prev[key] = undefined;
@@ -26,6 +27,7 @@ dijk = function (source, target, graph){
 	while (Object.keys(vertices).length >0){
 		//preset minDistance not visted yet to infinity
 		var minDist = Infinity;
+		
 		//find unvisited node with minimum distance from source
 		Object.keys(vertices).forEach((vertex) =>{
 			var vertDist = dists[vertex];
@@ -34,7 +36,10 @@ dijk = function (source, target, graph){
 				currentVertex = vertex;
 			}
 		});
-
+		
+		//visit this minimum distance node by checking it's edges and updating 
+		//it's neighbors if necessary. 
+		
 		//store edges before deleting object
 		var currentEdges = vertices[currentVertex];
 		//delete the current vertex from graph because we have now visited it
@@ -46,7 +51,10 @@ dijk = function (source, target, graph){
 		} else {
 			//find new shortest paths to all neighboring vertices if available
 			Object.keys(currentEdges).forEach((neighbor) => {
-				var testDist = (1.0/currentEdges[neighbor])+dists[currentVertex];
+				//1.0/currentEdges[neighbor] is the distance to this neighbor node
+				//the reason we use this reciprocal is to give shorter distance
+				//between 2 nodes with lots of collabs with eachother.
+				var testDist = (1.0/currentEdges[neighbor])+dists[currentVertex]; //adding the distance up to this point
 				if(testDist < dists[neighbor]){
 					prev[neighbor] = currentVertex;
 					dists[neighbor] = testDist;
@@ -57,6 +65,7 @@ dijk = function (source, target, graph){
 			if(currentVertex === target){
 				//prepend the target to the list
 				path.unshift(currentVertex);
+				
 				while(prev[currentVertex] != undefined){
 					//preprend prev to list and set new current to be the previous
 					path.unshift(prev[currentVertex])
